@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Coach Dani · Sesión</title>
+<style>
+:root{
+  --bg:#0F1B21; --panel:#16262E; --panel-2:#1C303A; --line:#2A424E;
+  --ink:#E9F0F2; --ink-2:#8FA6AE; --ink-3:#5C737C;
+  --agua:#3EC9D9; --agua-dk:#0E7B88; --carga:#F2A93B; --ok:#5BC978; --alerta:#E86A5C;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);max-width:520px;margin:0 auto;min-height:100vh;padding:18px 16px 40px;line-height:1.45}
+.eyebrow{font-size:10.5px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--agua)}
+h1{font-size:26px;font-weight:800;letter-spacing:-.5px;margin:2px 0 4px}
+h2{font-size:18px;font-weight:800;margin:0 0 10px}
+.sub{font-size:13px;color:var(--ink-2);margin-bottom:18px}
+.grid{display:grid;gap:10px}
+.opt{background:var(--panel);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;transition:border-color .15s}
+.opt:active{border-color:var(--agua)}
+.opt .t{font-size:16px;font-weight:800}
+.opt .d{font-size:12px;color:var(--ink-2);margin-top:3px}
+.opt.sel{border-color:var(--agua);background:var(--panel-2)}
+.row{display:flex;gap:10px}
+.row .opt{flex:1;text-align:center}
+.btn{display:block;width:100%;background:var(--agua);color:#06272C;border:none;border-radius:var(--r);padding:15px;font-size:15px;font-weight:800;cursor:pointer;margin-top:16px}
+.btn.ghost{background:transparent;color:var(--ink-2);border:1.5px solid var(--line);font-weight:600}
+.btn:disabled{opacity:.35}
+.back{background:none;border:none;color:var(--ink-3);font-size:13px;font-weight:700;cursor:pointer;padding:0;margin-bottom:14px}
+.chip{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:6px;background:var(--panel-2);color:var(--agua);border:1px solid var(--line);margin-right:6px}
+.chip.carga{color:var(--carga)}
+.chip.rodilla{color:var(--alerta)}
+/* Tarjeta ejercicio */
+.excard{background:var(--panel);border:1.5px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.exhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.exname{font-size:17px;font-weight:800}
+.exmeta{font-size:12px;color:var(--ink-2);margin-top:2px}
+.fig{background:var(--panel-2);border-radius:10px;margin:12px 0;padding:6px;display:flex;justify-content:center}
+.fig svg{width:100%;max-width:280px;height:auto}
+.fig .fA,.fig .fB{stroke:var(--ink);stroke-width:4;stroke-linecap:round;fill:none}
+.fig circle.h{fill:var(--ink);stroke:none}
+.fig .lb{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;fill:none}
+.fig .jt{fill:var(--agua);stroke:#0E7B88;stroke-width:.5;r:2.8}
+.fig .wt{fill:var(--carga)}
+.fig .acc{stroke:var(--carga)}
+.fig .fA{animation:swapA 2s infinite}
+.fig .fB{animation:swapB 2s infinite;opacity:0}
+@keyframes swapA{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
+@keyframes swapB{0%,45%{opacity:0}50%,95%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.fig .fA{animation:none}.fig .fB{animation:none;opacity:0}}
+.series{display:flex;gap:8px;margin:10px 0 4px;flex-wrap:wrap}
+.serie{flex:1;min-width:60px;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;padding:12px 0;text-align:center;font-weight:800;font-size:14px;color:var(--ink-2);cursor:pointer}
+.serie.done{background:var(--agua-dk);border-color:var(--agua);color:#fff}
+.reco{font-size:12.5px;color:var(--carga);margin-top:8px;font-weight:600}
+.reco.none{color:var(--ink-3);font-weight:400}
+.linkalt{background:none;border:none;color:var(--agua);font-size:12.5px;font-weight:700;cursor:pointer;padding:0;margin-top:10px}
+/* Timer descanso */
+.timerwrap{position:fixed;inset:0;background:rgba(6,17,21,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50}
+.timer{font-size:88px;font-weight:800;letter-spacing:-2px;color:var(--agua);font-variant-numeric:tabular-nums}
+.timerlbl{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.timerskip{margin-top:26px;background:var(--panel);color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:12px 28px;font-weight:700;cursor:pointer}
+/* Modal log */
+.modal{position:fixed;inset:0;background:rgba(6,17,21,.9);display:flex;align-items:flex-end;z-index:60}
+.sheet{background:var(--panel);border-radius:20px 20px 0 0;padding:22px 18px 30px;width:100%;max-width:520px;margin:0 auto}
+.sheet input{width:100%;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:20px;font-weight:800;padding:12px;text-align:center;margin:8px 0 14px}
+.feel{display:flex;gap:8px}
+.feel button{flex:1;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;padding:12px 0;font-size:20px;cursor:pointer}
+.feel button.sel{border-color:var(--carga);background:#3a2d14}
+.lbl{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3)}
+.progress{height:5px;background:var(--panel-2);border-radius:3px;margin:14px 0 18px;overflow:hidden}
+.progress div{height:100%;background:var(--agua);border-radius:3px;transition:width .3s}
+.dots{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0 10px}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:transparent;transition:all .2s}
+.dot.done{background:var(--agua);border-color:var(--agua)}
+.dot.now{border-color:var(--carga);background:var(--carga);box-shadow:0 0 0 4px rgba(242,169,59,.2)}
+.done-card{text-align:center;padding:40px 10px}
+.done-card .big{font-size:52px}
+.hist{font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px;margin-top:10px}
+.footer-note{font-size:11.5px;color:var(--ink-3);margin-top:20px;text-align:center}
+.demobar{background:var(--panel-2);border:1px solid var(--carga);border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--ink-2);margin-bottom:16px;cursor:pointer;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ============ DATOS DE EJERCICIOS ============ */
+/* svg: dos frames (fA/fB) para mostrar el movimiento. viewBox 200x120. */
+const SVGS = {
+sentadilla:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="22" r="8"/><line class="lb" x1="100" y1="30" x2="100" y2="66"/><line class="lb" x1="88" y1="42" x2="112" y2="42"/><line class="lb" x1="88" y1="42" x2="82" y2="60"/><line class="lb" x1="112" y1="42" x2="118" y2="60"/><line class="lb" x1="100" y1="66" x2="92" y2="86"/><line class="lb" x1="92" y1="86" x2="90" y2="107"/><line class="lb" x1="100" y1="66" x2="108" y2="86"/><line class="lb" x1="108" y1="86" x2="110" y2="107"/><circle class="jt" cx="88" cy="42" r="2.8"/><circle class="jt" cx="112" cy="42" r="2.8"/><circle class="jt" cx="100" cy="66" r="2.8"/><circle class="jt" cx="92" cy="86" r="2.8"/><circle class="jt" cx="108" cy="86" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="42" r="8"/><line class="lb" x1="100" y1="50" x2="100" y2="74"/><line class="lb" x1="88" y1="60" x2="112" y2="60"/><line class="lb" x1="88" y1="60" x2="80" y2="74"/><line class="lb" x1="112" y1="60" x2="120" y2="74"/><line class="lb" x1="100" y1="74" x2="80" y2="86"/><line class="lb" x1="80" y1="86" x2="84" y2="107"/><line class="lb" x1="100" y1="74" x2="120" y2="86"/><line class="lb" x1="120" y1="86" x2="116" y2="107"/><circle class="jt" cx="88" cy="60" r="2.8"/><circle class="jt" cx="112" cy="60" r="2.8"/><circle class="jt" cx="100" cy="74" r="2.8"/><circle class="jt" cx="80" cy="86" r="2.8"/><circle class="jt" cx="120" cy="86" r="2.8"/></g></svg>`,
+zancada:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="24" r="8"/><line class="lb" x1="100" y1="32" x2="100" y2="70"/><line class="lb" x1="100" y1="46" x2="90" y2="64"/><line class="lb" x1="100" y1="46" x2="110" y2="64"/><line class="lb" x1="100" y1="70" x2="98" y2="107"/><line class="lb" x1="100" y1="70" x2="106" y2="107"/><circle class="jt" cx="100" cy="46" r="2.8"/><circle class="jt" cx="100" cy="70" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="40" r="8"/><line class="lb" x1="100" y1="48" x2="100" y2="80"/><line class="lb" x1="100" y1="60" x2="92" y2="78"/><line class="lb" x1="100" y1="60" x2="110" y2="78"/><line class="lb" x1="100" y1="80" x2="74" y2="90"/><line class="lb" x1="74" y1="90" x2="72" y2="107"/><line class="lb" x1="100" y1="80" x2="126" y2="94"/><line class="lb" x1="126" y1="94" x2="136" y2="107"/><circle class="jt" cx="100" cy="60" r="2.8"/><circle class="jt" cx="100" cy="80" r="2.8"/><circle class="jt" cx="74" cy="90" r="2.8"/><circle class="jt" cx="126" cy="94" r="2.8"/></g></svg>`,
+stepup:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><rect x="120" y="80" width="50" height="27" fill="#1C303A" stroke="#2A424E" stroke-width="2"/>
+<g class="fA"><circle class="h" cx="80" cy="34" r="8"/><line class="lb" x1="80" y1="42" x2="82" y2="72"/><line class="lb" x1="82" y1="72" x2="74" y2="107"/><line class="lb" x1="82" y1="72" x2="128" y2="80"/><line class="lb" x1="128" y1="80" x2="130" y2="98"/><circle class="jt" cx="82" cy="72" r="2.8"/><circle class="jt" cx="128" cy="80" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="120" cy="24" r="8"/><line class="lb" x1="120" y1="32" x2="124" y2="60"/><line class="lb" x1="124" y1="60" x2="138" y2="80"/><line class="lb" x1="124" y1="60" x2="110" y2="88"/><line class="lb" x1="110" y1="88" x2="112" y2="107"/><circle class="jt" cx="124" cy="60" r="2.8"/><circle class="jt" cx="138" cy="80" r="2.8"/><circle class="jt" cx="110" cy="88" r="2.8"/></g></svg>`,
+boxjump:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><rect x="118" y="82" width="52" height="25" fill="#1C303A" stroke="#2A424E" stroke-width="2"/>
+<g class="fA"><circle class="h" cx="70" cy="40" r="8"/><line class="lb" x1="70" y1="48" x2="70" y2="74"/><line class="lb" x1="70" y1="56" x2="52" y2="66"/><line class="lb" x1="70" y1="56" x2="88" y2="66"/><line class="lb" x1="70" y1="74" x2="58" y2="96"/><line class="lb" x1="58" y1="96" x2="60" y2="107"/><line class="lb" x1="70" y1="74" x2="82" y2="96"/><line class="lb" x1="82" y1="96" x2="80" y2="107"/><circle class="jt" cx="70" cy="56" r="2.8"/><circle class="jt" cx="70" cy="74" r="2.8"/><circle class="jt" cx="58" cy="96" r="2.8"/><circle class="jt" cx="82" cy="96" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="128" cy="40" r="8"/><line class="lb" x1="128" y1="48" x2="130" y2="68"/><line class="lb" x1="130" y1="56" x2="114" y2="48"/><line class="lb" x1="130" y1="56" x2="144" y2="48"/><line class="lb" x1="130" y1="68" x2="124" y2="82"/><line class="lb" x1="130" y1="68" x2="140" y2="82"/><circle class="jt" cx="130" cy="56" r="2.8"/><circle class="jt" cx="130" cy="68" r="2.8"/></g></svg>`,
+hip_thrust:`<svg viewBox="0 0 200 120"><line x1="20" y1="100" x2="185" y2="100" stroke="#2A424E" stroke-width="3"/><rect x="20" y="55" width="34" height="45" rx="4" fill="#1C303A" stroke="#2A424E" stroke-width="2"/>
+<g class="fA"><circle class="h" cx="66" cy="72" r="8"/><line class="lb" x1="72" y1="76" x2="98" y2="90"/><line class="lb" x1="98" y1="90" x2="120" y2="90"/><line class="lb" x1="120" y1="90" x2="134" y2="100"/><circle class="wt" cx="98" cy="82" r="5"/><circle class="jt" cx="98" cy="90" r="2.8"/><circle class="jt" cx="120" cy="90" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="66" cy="60" r="8"/><line class="lb" x1="72" y1="64" x2="98" y2="66"/><line class="lb" x1="98" y1="66" x2="122" y2="80"/><line class="lb" x1="122" y1="80" x2="134" y2="100"/><circle class="wt" cx="98" cy="58" r="5"/><circle class="jt" cx="98" cy="66" r="2.8"/><circle class="jt" cx="122" cy="80" r="2.8"/></g></svg>`,
+rdl:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="20" r="8"/><line class="lb" x1="100" y1="28" x2="100" y2="70"/><line class="lb" x1="100" y1="40" x2="86" y2="54"/><line class="lb" x1="100" y1="40" x2="114" y2="54"/><line class="lb" x1="86" y1="54" x2="86" y2="66"/><line class="lb" x1="114" y1="54" x2="114" y2="66"/><line class="lb" x1="100" y1="70" x2="96" y2="107"/><line class="lb" x1="100" y1="70" x2="104" y2="107"/><line class="lb" x1="86" y1="66" x2="114" y2="66"/><circle class="jt" cx="100" cy="40" r="2.8"/><circle class="jt" cx="86" cy="54" r="2.8"/><circle class="jt" cx="114" cy="54" r="2.8"/><circle class="jt" cx="100" cy="70" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="140" cy="48" r="8"/><line class="lb" x1="134" y1="52" x2="102" y2="66"/><line class="lb" x1="120" y1="59" x2="118" y2="80"/><line class="lb" x1="102" y1="66" x2="98" y2="107"/><line class="lb" x1="102" y1="66" x2="106" y2="107"/><line class="lb" x1="118" y1="80" x2="92" y2="80"/><circle class="jt" cx="120" cy="59" r="2.8"/><circle class="jt" cx="102" cy="66" r="2.8"/><circle class="jt" cx="118" cy="80" r="2.8"/></g></svg>`,
+press_banca:`<svg viewBox="0 0 200 120"><rect x="55" y="82" width="90" height="9" rx="3" fill="#1C303A" stroke="#2A424E" stroke-width="2"/><line x1="70" y1="91" x2="70" y2="107" stroke="#2A424E" stroke-width="4"/><line x1="130" y1="91" x2="130" y2="107" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="72" cy="72" r="8"/><line class="lb" x1="80" y1="74" x2="100" y2="74"/><line class="lb" x1="100" y1="74" x2="100" y2="58"/><circle class="wt" cx="100" cy="54" r="6"/><circle class="jt" cx="100" cy="74" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="72" cy="72" r="8"/><line class="lb" x1="80" y1="74" x2="100" y2="74"/><line class="lb" x1="100" y1="74" x2="100" y2="38"/><circle class="wt" cx="100" cy="34" r="6"/><circle class="jt" cx="100" cy="74" r="2.8"/></g></svg>`,
+remo_polea:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><line x1="170" y1="20" x2="170" y2="107" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="72" cy="42" r="8"/><line class="lb" x1="72" y1="50" x2="76" y2="78"/><line class="lb" x1="76" y1="78" x2="62" y2="107"/><line class="lb" x1="76" y1="78" x2="92" y2="107"/><line class="lb" x1="76" y1="58" x2="140" y2="62"/><circle class="jt" cx="76" cy="58" r="2.8"/><circle class="jt" cx="76" cy="78" r="2.8"/><line x1="140" y1="62" x2="168" y2="60" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="68" cy="40" r="8"/><line class="lb" x1="68" y1="48" x2="74" y2="78"/><line class="lb" x1="74" y1="78" x2="60" y2="107"/><line class="lb" x1="74" y1="78" x2="90" y2="107"/><line class="lb" x1="74" y1="56" x2="96" y2="62"/><line class="lb" x1="96" y1="62" x2="110" y2="62"/><circle class="jt" cx="74" cy="56" r="2.8"/><circle class="jt" cx="96" cy="62" r="2.8"/><circle class="jt" cx="74" cy="78" r="2.8"/><line x1="110" y1="62" x2="168" y2="60" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+press_militar:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="30" r="8"/><line class="lb" x1="100" y1="38" x2="100" y2="80"/><line class="lb" x1="100" y1="50" x2="84" y2="50"/><line class="lb" x1="84" y1="50" x2="84" y2="40"/><line class="lb" x1="100" y1="50" x2="116" y2="50"/><line class="lb" x1="116" y1="50" x2="116" y2="40"/><line class="lb" x1="100" y1="80" x2="96" y2="95"/><line class="lb" x1="96" y1="95" x2="92" y2="107"/><circle class="jt" cx="96" cy="95" r="2.8"/><line class="lb" x1="100" y1="80" x2="104" y2="95"/><line class="lb" x1="104" y1="95" x2="108" y2="107"/><circle class="jt" cx="104" cy="95" r="2.8"/><circle class="wt" cx="84" cy="38" r="5"/><circle class="wt" cx="116" cy="38" r="5"/><circle class="jt" cx="100" cy="50" r="2.8"/><circle class="jt" cx="84" cy="50" r="2.8"/><circle class="jt" cx="116" cy="50" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="34" r="8"/><line class="lb" x1="100" y1="42" x2="100" y2="82"/><line class="lb" x1="100" y1="52" x2="88" y2="34"/><line class="lb" x1="88" y1="34" x2="88" y2="24"/><line class="lb" x1="100" y1="52" x2="112" y2="34"/><line class="lb" x1="112" y1="34" x2="112" y2="24"/><line class="lb" x1="100" y1="82" x2="96" y2="96"/><line class="lb" x1="96" y1="96" x2="92" y2="107"/><circle class="jt" cx="96" cy="96" r="2.8"/><line class="lb" x1="100" y1="82" x2="104" y2="96"/><line class="lb" x1="104" y1="96" x2="108" y2="107"/><circle class="jt" cx="104" cy="96" r="2.8"/><circle class="wt" cx="88" cy="22" r="5"/><circle class="wt" cx="112" cy="22" r="5"/><circle class="jt" cx="100" cy="52" r="2.8"/><circle class="jt" cx="88" cy="34" r="2.8"/><circle class="jt" cx="112" cy="34" r="2.8"/></g></svg>`,
+curl:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="26" r="8"/><line class="lb" x1="100" y1="34" x2="100" y2="76"/><line class="lb" x1="100" y1="46" x2="90" y2="66"/><line class="lb" x1="90" y1="66" x2="88" y2="78"/><line class="lb" x1="100" y1="46" x2="110" y2="66"/><line class="lb" x1="110" y1="66" x2="112" y2="78"/><line class="lb" x1="100" y1="76" x2="96" y2="93"/><line class="lb" x1="96" y1="93" x2="92" y2="107"/><circle class="jt" cx="96" cy="93" r="2.8"/><line class="lb" x1="100" y1="76" x2="104" y2="93"/><line class="lb" x1="104" y1="93" x2="108" y2="107"/><circle class="jt" cx="104" cy="93" r="2.8"/><circle class="wt" cx="88" cy="80" r="5"/><circle class="wt" cx="112" cy="80" r="5"/><circle class="jt" cx="100" cy="46" r="2.8"/><circle class="jt" cx="90" cy="66" r="2.8"/><circle class="jt" cx="110" cy="66" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="26" r="8"/><line class="lb" x1="100" y1="34" x2="100" y2="76"/><line class="lb" x1="100" y1="46" x2="90" y2="60"/><line class="lb" x1="90" y1="60" x2="96" y2="46"/><line class="lb" x1="100" y1="46" x2="110" y2="60"/><line class="lb" x1="110" y1="60" x2="104" y2="46"/><line class="lb" x1="100" y1="76" x2="96" y2="93"/><line class="lb" x1="96" y1="93" x2="92" y2="107"/><circle class="jt" cx="96" cy="93" r="2.8"/><line class="lb" x1="100" y1="76" x2="104" y2="93"/><line class="lb" x1="104" y1="93" x2="108" y2="107"/><circle class="jt" cx="104" cy="93" r="2.8"/><circle class="wt" cx="96" cy="44" r="5"/><circle class="wt" cx="104" cy="44" r="5"/><circle class="jt" cx="100" cy="46" r="2.8"/><circle class="jt" cx="90" cy="60" r="2.8"/><circle class="jt" cx="110" cy="60" r="2.8"/></g></svg>`,
+triceps:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><line x1="150" y1="18" x2="150" y2="107" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="92" cy="28" r="8"/><line class="lb" x1="92" y1="36" x2="92" y2="76"/><line class="lb" x1="92" y1="46" x2="112" y2="40"/><line class="lb" x1="112" y1="40" x2="130" y2="34"/><line class="lb" x1="92" y1="76" x2="88" y2="93"/><line class="lb" x1="88" y1="93" x2="84" y2="107"/><circle class="jt" cx="88" cy="93" r="2.8"/><line class="lb" x1="92" y1="76" x2="96" y2="93"/><line class="lb" x1="96" y1="93" x2="100" y2="107"/><circle class="jt" cx="96" cy="93" r="2.8"/><circle class="jt" cx="92" cy="46" r="2.8"/><circle class="jt" cx="112" cy="40" r="2.8"/><line x1="130" y1="34" x2="148" y2="24" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="92" cy="28" r="8"/><line class="lb" x1="92" y1="36" x2="92" y2="76"/><line class="lb" x1="92" y1="46" x2="110" y2="54"/><line class="lb" x1="110" y1="54" x2="130" y2="34"/><line class="lb" x1="92" y1="76" x2="88" y2="93"/><line class="lb" x1="88" y1="93" x2="84" y2="107"/><circle class="jt" cx="88" cy="93" r="2.8"/><line class="lb" x1="92" y1="76" x2="96" y2="93"/><line class="lb" x1="96" y1="93" x2="100" y2="107"/><circle class="jt" cx="96" cy="93" r="2.8"/><circle class="jt" cx="92" cy="46" r="2.8"/><circle class="jt" cx="110" cy="54" r="2.8"/><line x1="130" y1="34" x2="148" y2="24" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+pallof:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><line x1="176" y1="20" x2="176" y2="107" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="90" cy="30" r="8"/><line class="lb" x1="90" y1="38" x2="90" y2="78"/><line class="lb" x1="90" y1="52" x2="112" y2="52"/><line class="lb" x1="90" y1="78" x2="82" y2="107"/><line class="lb" x1="90" y1="78" x2="98" y2="107"/><circle class="jt" cx="90" cy="52" r="2.8"/><circle class="jt" cx="90" cy="78" r="2.8"/><line x1="112" y1="52" x2="174" y2="50" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="90" cy="30" r="8"/><line class="lb" x1="90" y1="38" x2="90" y2="78"/><line class="lb" x1="90" y1="52" x2="110" y2="52"/><line class="lb" x1="110" y1="52" x2="128" y2="52"/><line class="lb" x1="90" y1="78" x2="82" y2="107"/><line class="lb" x1="90" y1="78" x2="98" y2="107"/><circle class="jt" cx="90" cy="52" r="2.8"/><circle class="jt" cx="110" cy="52" r="2.8"/><circle class="jt" cx="90" cy="78" r="2.8"/><line x1="128" y1="52" x2="174" y2="50" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+plancha_alc:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="70" r="8"/><line class="lb" x1="60" y1="72" x2="140" y2="88"/><line class="lb" x1="140" y1="88" x2="166" y2="107"/><line class="lb" x1="64" y1="74" x2="64" y2="107"/><line class="lb" x1="100" y1="80" x2="100" y2="107"/><circle class="jt" cx="64" cy="74" r="2.8"/><circle class="jt" cx="100" cy="80" r="2.8"/><circle class="jt" cx="140" cy="88" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="52" cy="66" r="8"/><line class="lb" x1="60" y1="68" x2="140" y2="88"/><line class="lb" x1="140" y1="88" x2="166" y2="107"/><line class="lb" x1="62" y1="70" x2="30" y2="60"/><line class="lb" x1="100" y1="80" x2="100" y2="107"/><circle class="jt" cx="100" cy="80" r="2.8"/><circle class="jt" cx="140" cy="88" r="2.8"/></g></svg>`,
+dead_bug:`<svg viewBox="0 0 200 120"><line x1="20" y1="100" x2="185" y2="100" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="60" cy="90" r="8"/><line class="lb" x1="68" y1="90" x2="130" y2="90"/><line class="lb" x1="84" y1="90" x2="84" y2="62"/><line class="lb" x1="112" y1="90" x2="112" y2="70"/><line class="lb" x1="112" y1="70" x2="126" y2="60"/><circle class="jt" cx="84" cy="90" r="2.8"/><circle class="jt" cx="112" cy="90" r="2.8"/><circle class="jt" cx="112" cy="70" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="60" cy="90" r="8"/><line class="lb" x1="68" y1="90" x2="130" y2="90"/><line class="lb" x1="84" y1="90" x2="70" y2="66"/><line class="lb" x1="112" y1="90" x2="132" y2="78"/><circle class="jt" cx="84" cy="90" r="2.8"/><circle class="jt" cx="112" cy="90" r="2.8"/></g></svg>`,
+burpee_np:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="24" r="8"/><line class="lb" x1="100" y1="32" x2="100" y2="72"/><line class="lb" x1="100" y1="44" x2="84" y2="56"/><line class="lb" x1="100" y1="44" x2="116" y2="56"/><line class="lb" x1="100" y1="72" x2="92" y2="107"/><line class="lb" x1="100" y1="72" x2="108" y2="107"/><circle class="jt" cx="100" cy="44" r="2.8"/><circle class="jt" cx="100" cy="72" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="56" cy="66" r="8"/><line class="lb" x1="64" y1="68" x2="138" y2="88"/><line class="lb" x1="138" y1="88" x2="164" y2="107"/><line class="lb" x1="68" y1="70" x2="68" y2="107"/><line class="lb" x1="100" y1="78" x2="100" y2="107"/><circle class="jt" cx="68" cy="70" r="2.8"/><circle class="jt" cx="138" cy="88" r="2.8"/></g></svg>`,
+flexiones:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="46" cy="60" r="8"/><line class="lb" x1="54" y1="62" x2="150" y2="82"/><line class="lb" x1="150" y1="82" x2="168" y2="105"/><line class="lb" x1="66" y1="66" x2="66" y2="105"/><line class="lb" x1="82" y1="68" x2="82" y2="105"/><circle class="jt" cx="66" cy="66" r="2.8"/><circle class="jt" cx="66" cy="105" r="2.8"/><circle class="jt" cx="150" cy="82" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="46" cy="82" r="8"/><line class="lb" x1="54" y1="84" x2="150" y2="90"/><line class="lb" x1="150" y1="90" x2="168" y2="105"/><line class="lb" x1="64" y1="86" x2="60" y2="105"/><line class="lb" x1="80" y1="88" x2="76" y2="105"/><circle class="jt" cx="64" cy="86" r="2.8"/><circle class="jt" cx="60" cy="105" r="2.8"/><circle class="jt" cx="150" cy="90" r="2.8"/></g></svg>`,
+pike_pushup:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="70" cy="44" r="8"/><line class="lb" x1="74" y1="50" x2="100" y2="40"/><line class="lb" x1="100" y1="40" x2="70" y2="70"/><line class="lb" x1="100" y1="40" x2="150" y2="98"/><circle class="jt" cx="100" cy="40" r="2.8"/><circle class="jt" cx="74" cy="52" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="58" cy="66" r="8"/><line class="lb" x1="64" y1="70" x2="100" y2="42"/><line class="lb" x1="64" y1="70" x2="66" y2="92"/><line class="lb" x1="100" y1="42" x2="150" y2="98"/><circle class="jt" cx="100" cy="42" r="2.8"/><circle class="jt" cx="64" cy="70" r="2.8"/></g></svg>`,
+remo_banda:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="176" cy="60" r="5" fill="#2A424E"/>
+<g class="fA"><circle class="h" cx="80" cy="36" r="8"/><line class="lb" x1="80" y1="44" x2="84" y2="80"/><line class="lb" x1="84" y1="80" x2="70" y2="107"/><line class="lb" x1="84" y1="80" x2="98" y2="107"/><line class="lb" x1="84" y1="54" x2="142" y2="58"/><circle class="jt" cx="84" cy="54" r="2.8"/><circle class="jt" cx="84" cy="80" r="2.8"/><line x1="142" y1="58" x2="172" y2="60" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="78" cy="34" r="8"/><line class="lb" x1="78" y1="42" x2="82" y2="80"/><line class="lb" x1="82" y1="80" x2="68" y2="107"/><line class="lb" x1="82" y1="80" x2="96" y2="107"/><line class="lb" x1="82" y1="52" x2="104" y2="58"/><line class="lb" x1="104" y1="58" x2="116" y2="58"/><circle class="jt" cx="82" cy="52" r="2.8"/><circle class="jt" cx="104" cy="58" r="2.8"/><circle class="jt" cx="82" cy="80" r="2.8"/><line x1="116" y1="58" x2="172" y2="60" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+puente:`<svg viewBox="0 0 200 120"><line x1="20" y1="100" x2="185" y2="100" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="56" cy="90" r="8"/><line class="lb" x1="64" y1="92" x2="116" y2="92"/><line class="lb" x1="116" y1="92" x2="138" y2="100"/><circle class="jt" cx="116" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="56" cy="88" r="8"/><line class="lb" x1="64" y1="88" x2="114" y2="70"/><line class="lb" x1="114" y1="70" x2="136" y2="100"/><circle class="wt" cx="112" cy="66" r="5"/><circle class="jt" cx="114" cy="70" r="2.8"/></g></svg>`,
+bici:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="70" cy="92" r="14" fill="none" stroke="#2A424E" stroke-width="3"/><circle cx="140" cy="92" r="14" fill="none" stroke="#2A424E" stroke-width="3"/><path d="M70 92 L100 62 L140 92 M100 62 L96 92" stroke="#2A424E" stroke-width="3" fill="none"/>
+<g class="fA"><circle class="h" cx="112" cy="32" r="8"/><line class="lb" x1="110" y1="40" x2="100" y2="60"/><line class="lb" x1="104" y1="50" x2="120" y2="56"/><line class="lb" x1="100" y1="60" x2="88" y2="78"/><line class="lb" x1="88" y1="78" x2="96" y2="92"/><line class="lb" x1="100" y1="60" x2="112" y2="80"/><line class="lb" x1="112" y1="80" x2="96" y2="92"/><circle class="jt" cx="100" cy="60" r="2.8"/><circle class="jt" cx="88" cy="78" r="2.8"/><circle class="jt" cx="112" cy="80" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="112" cy="32" r="8"/><line class="lb" x1="110" y1="40" x2="100" y2="60"/><line class="lb" x1="104" y1="50" x2="120" y2="56"/><line class="lb" x1="100" y1="60" x2="114" y2="76"/><line class="lb" x1="114" y1="76" x2="96" y2="92"/><line class="lb" x1="100" y1="60" x2="86" y2="80"/><line class="lb" x1="86" y1="80" x2="96" y2="92"/><circle class="jt" cx="100" cy="60" r="2.8"/><circle class="jt" cx="114" cy="76" r="2.8"/><circle class="jt" cx="86" cy="80" r="2.8"/></g></svg>`,
+pull_up:`<svg viewBox="0 0 200 120"><line x1="50" y1="18" x2="150" y2="18" stroke="#2A424E" stroke-width="5"/>
+<g class="fA"><circle class="h" cx="100" cy="52" r="8"/><line class="lb" x1="100" y1="60" x2="100" y2="88"/><line class="lb" x1="100" y1="88" x2="94" y2="108"/><line class="lb" x1="100" y1="88" x2="106" y2="108"/><line class="lb" x1="100" y1="62" x2="82" y2="20"/><line class="lb" x1="100" y1="62" x2="118" y2="20"/><circle class="jt" cx="90" cy="40" r="2.8"/><circle class="jt" cx="110" cy="40" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="32" r="8"/><line class="lb" x1="100" y1="40" x2="100" y2="72"/><line class="lb" x1="100" y1="72" x2="94" y2="94"/><line class="lb" x1="100" y1="72" x2="106" y2="94"/><line class="lb" x1="100" y1="44" x2="84" y2="20"/><line class="lb" x1="100" y1="44" x2="116" y2="20"/><circle class="jt" cx="90" cy="30" r="2.8"/><circle class="jt" cx="110" cy="30" r="2.8"/></g></svg>`,
+eliptica:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><ellipse cx="100" cy="100" rx="34" ry="6" fill="none" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="102" cy="26" r="8"/><line class="lb" x1="102" y1="34" x2="100" y2="62"/><line class="lb" x1="102" y1="44" x2="86" y2="58"/><line class="lb" x1="102" y1="44" x2="118" y2="56"/><line class="lb" x1="100" y1="62" x2="84" y2="78"/><line class="lb" x1="84" y1="78" x2="86" y2="96"/><line class="lb" x1="100" y1="62" x2="118" y2="76"/><line class="lb" x1="118" y1="76" x2="114" y2="94"/><circle class="jt" cx="100" cy="62" r="2.8"/><circle class="jt" cx="84" cy="78" r="2.8"/><circle class="jt" cx="118" cy="76" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="102" cy="26" r="8"/><line class="lb" x1="102" y1="34" x2="100" y2="62"/><line class="lb" x1="102" y1="44" x2="86" y2="56"/><line class="lb" x1="102" y1="44" x2="118" y2="58"/><line class="lb" x1="100" y1="62" x2="116" y2="78"/><line class="lb" x1="116" y1="78" x2="114" y2="96"/><line class="lb" x1="100" y1="62" x2="82" y2="76"/><line class="lb" x1="82" y1="76" x2="86" y2="94"/><circle class="jt" cx="100" cy="62" r="2.8"/><circle class="jt" cx="116" cy="78" r="2.8"/><circle class="jt" cx="82" cy="76" r="2.8"/></g></svg>`,
+femoral:`<svg viewBox="0 0 200 120"><rect x="40" y="72" width="110" height="10" rx="3" fill="#1C303A" stroke="#2A424E" stroke-width="2"/><line x1="55" y1="82" x2="55" y2="107" stroke="#2A424E" stroke-width="4"/><line x1="135" y1="82" x2="135" y2="107" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="58" cy="64" r="8"/><line class="lb" x1="66" y1="66" x2="128" y2="66"/><line class="lb" x1="128" y1="66" x2="156" y2="72"/><circle class="wt" cx="158" cy="74" r="5"/><circle class="jt" cx="128" cy="66" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="58" cy="64" r="8"/><line class="lb" x1="66" y1="66" x2="128" y2="66"/><line class="lb" x1="128" y1="66" x2="142" y2="42"/><circle class="wt" cx="144" cy="38" r="5"/><circle class="jt" cx="128" cy="66" r="2.8"/></g></svg>`,
+nado:`<svg viewBox="0 0 200 120"><path d="M15 80 Q30 74 45 80 T75 80 T105 80 T135 80 T165 80 T195 80" stroke="#2A424E" stroke-width="3" fill="none"/>
+<g class="fA"><circle class="h" cx="62" cy="72" r="8"/><line class="lb" x1="70" y1="74" x2="132" y2="76"/><line class="lb" x1="132" y1="76" x2="152" y2="72"/><line class="lb" x1="132" y1="76" x2="148" y2="84"/><line class="lb" x1="78" y1="72" x2="88" y2="50"/><line class="lb" x1="88" y1="50" x2="104" y2="46"/><circle class="jt" cx="78" cy="72" r="2.8"/><circle class="jt" cx="88" cy="50" r="2.8"/><circle class="jt" cx="132" cy="76" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="62" cy="72" r="8"/><line class="lb" x1="70" y1="74" x2="132" y2="76"/><line class="lb" x1="132" y1="76" x2="152" y2="80"/><line class="lb" x1="132" y1="76" x2="148" y2="70"/><line class="lb" x1="78" y1="72" x2="72" y2="92"/><line class="lb" x1="72" y1="92" x2="62" y2="104"/><circle class="jt" cx="78" cy="72" r="2.8"/><circle class="jt" cx="72" cy="92" r="2.8"/><circle class="jt" cx="132" cy="76" r="2.8"/></g></svg>`,
+nado_pull:`<svg viewBox="0 0 200 120"><path d="M15 80 Q30 74 45 80 T75 80 T105 80 T135 80 T165 80 T195 80" stroke="#2A424E" stroke-width="3" fill="none"/><rect x="122" y="70" width="14" height="12" rx="4" fill="#F2A93B"/>
+<g class="fA"><circle class="h" cx="62" cy="72" r="8"/><line class="lb" x1="70" y1="74" x2="144" y2="76"/><line class="lb" x1="78" y1="72" x2="88" y2="50"/><line class="lb" x1="88" y1="50" x2="104" y2="46"/><circle class="jt" cx="78" cy="72" r="2.8"/><circle class="jt" cx="88" cy="50" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="62" cy="72" r="8"/><line class="lb" x1="70" y1="74" x2="144" y2="76"/><line class="lb" x1="78" y1="72" x2="72" y2="92"/><line class="lb" x1="72" y1="92" x2="62" y2="104"/><circle class="jt" cx="78" cy="72" r="2.8"/><circle class="jt" cx="72" cy="92" r="2.8"/></g></svg>`,
+nado_tabla:`<svg viewBox="0 0 200 120"><path d="M15 80 Q30 74 45 80 T75 80 T105 80 T135 80 T165 80 T195 80" stroke="#2A424E" stroke-width="3" fill="none"/><rect x="26" y="66" width="30" height="9" rx="4" fill="#3EC9D9"/>
+<g class="fA"><circle class="h" cx="72" cy="68" r="8"/><line class="lb" x1="80" y1="70" x2="140" y2="74"/><line class="lb" x1="140" y1="74" x2="158" y2="70"/><line class="lb" x1="72" y1="68" x2="52" y2="68"/><line class="lb" x1="52" y1="68" x2="40" y2="70"/><circle class="jt" cx="140" cy="74" r="2.8"/><circle class="jt" cx="52" cy="68" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="72" cy="68" r="8"/><line class="lb" x1="80" y1="70" x2="140" y2="74"/><line class="lb" x1="140" y1="74" x2="158" y2="78"/><line class="lb" x1="72" y1="68" x2="58" y2="54"/><line class="lb" x1="58" y1="54" x2="48" y2="46"/><circle class="jt" cx="140" cy="74" r="2.8"/><circle class="jt" cx="58" cy="54" r="2.8"/></g></svg>`,
+rot_ext:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="20" cy="60" r="5" fill="#2A424E"/>
+<g class="fA"><circle class="h" cx="110" cy="40" r="8"/><line class="lb" x1="110" y1="48" x2="110" y2="84"/><line class="lb" x1="110" y1="84" x2="106" y2="97"/><line class="lb" x1="106" y1="97" x2="102" y2="107"/><circle class="jt" cx="106" cy="97" r="2.8"/><line class="lb" x1="110" y1="84" x2="114" y2="97"/><line class="lb" x1="114" y1="97" x2="118" y2="107"/><circle class="jt" cx="114" cy="97" r="2.8"/><line class="lb" x1="110" y1="56" x2="88" y2="58"/><line class="lb" x1="88" y1="58" x2="86" y2="42"/><circle class="jt" cx="110" cy="56" r="2.8"/><circle class="jt" cx="88" cy="58" r="2.8"/><line x1="86" y1="42" x2="22" y2="58" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="110" cy="40" r="8"/><line class="lb" x1="110" y1="48" x2="110" y2="84"/><line class="lb" x1="110" y1="84" x2="106" y2="97"/><line class="lb" x1="106" y1="97" x2="102" y2="107"/><circle class="jt" cx="106" cy="97" r="2.8"/><line class="lb" x1="110" y1="84" x2="114" y2="97"/><line class="lb" x1="114" y1="97" x2="118" y2="107"/><circle class="jt" cx="114" cy="97" r="2.8"/><line class="lb" x1="110" y1="56" x2="88" y2="58"/><line class="lb" x1="88" y1="58" x2="108" y2="44"/><circle class="jt" cx="110" cy="56" r="2.8"/><circle class="jt" cx="88" cy="58" r="2.8"/><line x1="108" y1="44" x2="22" y2="58" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+reverse_fly:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="44" r="8"/><line class="lb" x1="100" y1="52" x2="108" y2="78"/><line class="lb" x1="108" y1="78" x2="104" y2="94"/><line class="lb" x1="104" y1="94" x2="100" y2="107"/><circle class="jt" cx="104" cy="94" r="2.8"/><line class="lb" x1="108" y1="78" x2="113" y2="92"/><line class="lb" x1="113" y1="92" x2="118" y2="104"/><circle class="jt" cx="113" cy="92" r="2.8"/><line class="lb" x1="102" y1="60" x2="86" y2="72"/><line class="lb" x1="102" y1="60" x2="118" y2="72"/><circle class="wt" cx="84" cy="74" r="5"/><circle class="wt" cx="120" cy="74" r="5"/><circle class="jt" cx="102" cy="60" r="2.8"/><circle class="jt" cx="86" cy="72" r="2.8"/><circle class="jt" cx="118" cy="72" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="44" r="8"/><line class="lb" x1="100" y1="52" x2="108" y2="78"/><line class="lb" x1="108" y1="78" x2="104" y2="94"/><line class="lb" x1="104" y1="94" x2="100" y2="107"/><circle class="jt" cx="104" cy="94" r="2.8"/><line class="lb" x1="108" y1="78" x2="113" y2="92"/><line class="lb" x1="113" y1="92" x2="118" y2="104"/><circle class="jt" cx="113" cy="92" r="2.8"/><line class="lb" x1="102" y1="58" x2="72" y2="50"/><line class="lb" x1="102" y1="58" x2="132" y2="50"/><circle class="wt" cx="68" cy="49" r="5"/><circle class="wt" cx="136" cy="49" r="5"/><circle class="jt" cx="102" cy="58" r="2.8"/><circle class="jt" cx="72" cy="50" r="2.8"/><circle class="jt" cx="132" cy="50" r="2.8"/></g></svg>`,
+elev_lat:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="20" r="8"/><line class="lb" x1="100" y1="28" x2="100" y2="78"/><line class="lb" x1="88" y1="46" x2="112" y2="46"/><line class="lb" x1="88" y1="46" x2="82" y2="64"/><line class="lb" x1="82" y1="64" x2="80" y2="76"/><line class="lb" x1="112" y1="46" x2="118" y2="64"/><line class="lb" x1="118" y1="64" x2="120" y2="76"/><line class="lb" x1="100" y1="78" x2="90" y2="105"/><line class="lb" x1="100" y1="78" x2="110" y2="105"/><circle class="wt" cx="80" cy="78" r="6"/><circle class="wt" cx="120" cy="78" r="6"/><circle class="jt" cx="88" cy="46" r="2.8"/><circle class="jt" cx="112" cy="46" r="2.8"/><circle class="jt" cx="82" cy="64" r="2.8"/><circle class="jt" cx="118" cy="64" r="2.8"/><circle class="jt" cx="100" cy="78" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="20" r="8"/><line class="lb" x1="100" y1="28" x2="100" y2="78"/><line class="lb" x1="88" y1="46" x2="112" y2="46"/><line class="lb" x1="88" y1="46" x2="74" y2="46"/><line class="lb" x1="74" y1="46" x2="62" y2="46"/><line class="lb" x1="112" y1="46" x2="126" y2="46"/><line class="lb" x1="126" y1="46" x2="138" y2="46"/><line class="lb" x1="100" y1="78" x2="90" y2="105"/><line class="lb" x1="100" y1="78" x2="110" y2="105"/><circle class="wt" cx="60" cy="46" r="6"/><circle class="wt" cx="140" cy="46" r="6"/><circle class="jt" cx="88" cy="46" r="2.8"/><circle class="jt" cx="112" cy="46" r="2.8"/><circle class="jt" cx="74" cy="46" r="2.8"/><circle class="jt" cx="126" cy="46" r="2.8"/><circle class="jt" cx="100" cy="78" r="2.8"/></g></svg>`,
+face_pull:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><line x1="176" y1="20" x2="176" y2="60" stroke="#2A424E" stroke-width="4"/>
+<g class="fA"><circle class="h" cx="70" cy="40" r="8"/><line class="lb" x1="70" y1="48" x2="72" y2="82"/><line class="lb" x1="72" y1="82" x2="68" y2="96"/><line class="lb" x1="68" y1="96" x2="64" y2="107"/><circle class="jt" cx="68" cy="96" r="2.8"/><line class="lb" x1="72" y1="82" x2="77" y2="96"/><line class="lb" x1="77" y1="96" x2="82" y2="107"/><circle class="jt" cx="77" cy="96" r="2.8"/><line class="lb" x1="72" y1="54" x2="130" y2="52"/><circle class="jt" cx="72" cy="54" r="2.8"/><line x1="130" y1="52" x2="174" y2="40" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g>
+<g class="fB"><circle class="h" cx="70" cy="40" r="8"/><line class="lb" x1="70" y1="48" x2="72" y2="82"/><line class="lb" x1="72" y1="82" x2="68" y2="96"/><line class="lb" x1="68" y1="96" x2="64" y2="107"/><circle class="jt" cx="68" cy="96" r="2.8"/><line class="lb" x1="72" y1="82" x2="77" y2="96"/><line class="lb" x1="77" y1="96" x2="82" y2="107"/><circle class="jt" cx="77" cy="96" r="2.8"/><line class="lb" x1="72" y1="54" x2="92" y2="40"/><line class="lb" x1="92" y1="40" x2="86" y2="30"/><circle class="jt" cx="72" cy="54" r="2.8"/><circle class="jt" cx="92" cy="40" r="2.8"/><line x1="92" y1="40" x2="174" y2="40" stroke="#5C737C" stroke-width="2" stroke-dasharray="4 3"/></g></svg>`,
+pullover:`<svg viewBox="0 0 200 120"><rect x="60" y="82" width="80" height="9" rx="3" fill="#1C303A" stroke="#2A424E" stroke-width="2"/>
+<g class="fA"><circle class="h" cx="70" cy="74" r="8"/><line class="lb" x1="78" y1="76" x2="128" y2="76"/><line class="lb" x1="90" y1="76" x2="96" y2="52"/><circle class="wt" cx="97" cy="48" r="6"/><circle class="jt" cx="90" cy="76" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="70" cy="74" r="8"/><line class="lb" x1="78" y1="76" x2="128" y2="76"/><line class="lb" x1="90" y1="76" x2="64" y2="54"/><circle class="wt" cx="60" cy="49" r="6"/><circle class="jt" cx="90" cy="76" r="2.8"/></g></svg>`,
+pushup_exp:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="86" r="8"/><line class="lb" x1="60" y1="88" x2="140" y2="92"/><line class="lb" x1="140" y1="92" x2="166" y2="107"/><line class="lb" x1="66" y1="90" x2="64" y2="107"/><line class="lb" x1="78" y1="91" x2="78" y2="107"/><circle class="jt" cx="66" cy="90" r="2.8"/><circle class="jt" cx="140" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="52" cy="60" r="8"/><line class="lb" x1="60" y1="64" x2="140" y2="84"/><line class="lb" x1="140" y1="84" x2="166" y2="107"/><line class="lb" x1="66" y1="68" x2="60" y2="107"/><line class="lb" x1="80" y1="72" x2="74" y2="107"/><circle class="jt" cx="66" cy="68" r="2.8"/><circle class="jt" cx="140" cy="84" r="2.8"/></g></svg>`,
+arnold:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="30" r="8"/><line class="lb" x1="100" y1="38" x2="100" y2="80"/><line class="lb" x1="100" y1="50" x2="84" y2="48"/><line class="lb" x1="84" y1="48" x2="82" y2="34"/><line class="lb" x1="100" y1="50" x2="116" y2="48"/><line class="lb" x1="116" y1="48" x2="118" y2="34"/><line class="lb" x1="100" y1="80" x2="96" y2="95"/><line class="lb" x1="96" y1="95" x2="92" y2="107"/><circle class="jt" cx="96" cy="95" r="2.8"/><line class="lb" x1="100" y1="80" x2="104" y2="95"/><line class="lb" x1="104" y1="95" x2="108" y2="107"/><circle class="jt" cx="104" cy="95" r="2.8"/><circle class="wt" cx="80" cy="46" r="5"/><circle class="wt" cx="120" cy="46" r="5"/><circle class="jt" cx="100" cy="50" r="2.8"/><circle class="jt" cx="84" cy="48" r="2.8"/><circle class="jt" cx="116" cy="48" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="30" r="8"/><line class="lb" x1="100" y1="38" x2="100" y2="80"/><line class="lb" x1="100" y1="48" x2="86" y2="30"/><line class="lb" x1="86" y1="30" x2="86" y2="22"/><line class="lb" x1="100" y1="48" x2="114" y2="30"/><line class="lb" x1="114" y1="30" x2="114" y2="22"/><line class="lb" x1="100" y1="80" x2="96" y2="95"/><line class="lb" x1="96" y1="95" x2="92" y2="107"/><circle class="jt" cx="96" cy="95" r="2.8"/><line class="lb" x1="100" y1="80" x2="104" y2="95"/><line class="lb" x1="104" y1="95" x2="108" y2="107"/><circle class="jt" cx="104" cy="95" r="2.8"/><circle class="wt" cx="86" cy="20" r="5"/><circle class="wt" cx="114" cy="20" r="5"/><circle class="jt" cx="100" cy="48" r="2.8"/><circle class="jt" cx="86" cy="30" r="2.8"/><circle class="jt" cx="114" cy="30" r="2.8"/></g></svg>`,
+farmer:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="96" cy="24" r="8"/><line class="lb" x1="96" y1="32" x2="96" y2="72"/><line class="lb" x1="96" y1="42" x2="80" y2="42"/><line class="lb" x1="80" y1="42" x2="80" y2="72"/><line class="lb" x1="96" y1="42" x2="112" y2="42"/><line class="lb" x1="112" y1="42" x2="112" y2="72"/><line class="lb" x1="96" y1="72" x2="92" y2="91"/><line class="lb" x1="92" y1="91" x2="88" y2="107"/><circle class="jt" cx="92" cy="91" r="2.8"/><line class="lb" x1="96" y1="72" x2="100" y2="91"/><line class="lb" x1="100" y1="91" x2="104" y2="107"/><circle class="jt" cx="100" cy="91" r="2.8"/><circle class="wt" cx="80" cy="76" r="6"/><circle class="wt" cx="112" cy="76" r="6"/><circle class="jt" cx="80" cy="42" r="2.8"/><circle class="jt" cx="112" cy="42" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="102" cy="24" r="8"/><line class="lb" x1="102" y1="32" x2="102" y2="72"/><line class="lb" x1="102" y1="42" x2="86" y2="42"/><line class="lb" x1="86" y1="42" x2="86" y2="70"/><line class="lb" x1="102" y1="42" x2="118" y2="42"/><line class="lb" x1="118" y1="42" x2="118" y2="74"/><line class="lb" x1="102" y1="72" x2="98" y2="91"/><line class="lb" x1="98" y1="91" x2="94" y2="107"/><circle class="jt" cx="98" cy="91" r="2.8"/><line class="lb" x1="102" y1="72" x2="106" y2="91"/><line class="lb" x1="106" y1="91" x2="110" y2="107"/><circle class="jt" cx="106" cy="91" r="2.8"/><circle class="wt" cx="86" cy="74" r="6"/><circle class="wt" cx="118" cy="78" r="6"/><circle class="jt" cx="86" cy="42" r="2.8"/><circle class="jt" cx="118" cy="42" r="2.8"/></g></svg>`,
+sw_cal:`<svg viewBox="0 0 200 120"><path d="M15 78 Q30 72 45 78 T75 78 T105 78 T135 78 T165 78 T195 78" stroke="#2A424E" stroke-width="3" fill="none"/><g class="fA"><circle class="h" cx="60" cy="70" r="8"/><line class="lb" x1="68" y1="72" x2="130" y2="74"/><line class="lb" x1="74" y1="70" x2="96" y2="48"/><circle class="jt" cx="96" cy="48" r="2.8"/></g><g class="fB"><circle class="h" cx="60" cy="70" r="8"/><line class="lb" x1="68" y1="72" x2="130" y2="74"/><line class="lb" x1="74" y1="70" x2="58" y2="92"/><circle class="jt" cx="58" cy="92" r="2.8"/></g></svg>`,
+fr_glut:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="105" cy="99" r="8" fill="none" stroke="#F2A93B" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="60" cy="52" r="8"/><line class="lb" x1="66" y1="58" x2="100" y2="92"/><line class="lb" x1="100" y1="92" x2="130" y2="84"/><line class="lb" x1="130" y1="84" x2="146" y2="107"/><line class="lb" x1="70" y1="66" x2="56" y2="107"/><circle class="jt" cx="100" cy="92" r="2.8"/><circle class="jt" cx="130" cy="84" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="66" cy="54" r="8"/><line class="lb" x1="72" y1="60" x2="104" y2="92"/><line class="lb" x1="104" y1="92" x2="134" y2="84"/><line class="lb" x1="134" y1="84" x2="150" y2="107"/><line class="lb" x1="76" y1="68" x2="62" y2="107"/><circle class="jt" cx="104" cy="92" r="2.8"/><circle class="jt" cx="134" cy="84" r="2.8"/></g></svg>`,
+fr_isq:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="112" cy="99" r="8" fill="none" stroke="#F2A93B" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="60" r="8"/><line class="lb" x1="58" y1="66" x2="92" y2="90"/><line class="lb" x1="92" y1="90" x2="130" y2="92"/><line class="lb" x1="130" y1="92" x2="152" y2="96"/><line class="lb" x1="62" y1="72" x2="52" y2="107"/><circle class="jt" cx="92" cy="90" r="2.8"/><circle class="jt" cx="130" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="58" cy="62" r="8"/><line class="lb" x1="64" y1="68" x2="98" y2="90"/><line class="lb" x1="98" y1="90" x2="136" y2="92"/><line class="lb" x1="136" y1="92" x2="158" y2="96"/><line class="lb" x1="68" y1="74" x2="58" y2="107"/><circle class="jt" cx="98" cy="90" r="2.8"/><circle class="jt" cx="136" cy="92" r="2.8"/></g></svg>`,
+fr_cuad:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="118" cy="99" r="8" fill="none" stroke="#F2A93B" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="50" cy="72" r="8"/><line class="lb" x1="58" y1="76" x2="96" y2="86"/><line class="lb" x1="96" y1="86" x2="134" y2="94"/><line class="lb" x1="134" y1="94" x2="156" y2="100"/><line class="lb" x1="62" y1="78" x2="60" y2="107"/><line class="lb" x1="74" y1="80" x2="74" y2="107"/><circle class="jt" cx="96" cy="86" r="2.8"/><circle class="jt" cx="134" cy="94" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="56" cy="72" r="8"/><line class="lb" x1="64" y1="76" x2="102" y2="86"/><line class="lb" x1="102" y1="86" x2="140" y2="94"/><line class="lb" x1="140" y1="94" x2="162" y2="100"/><line class="lb" x1="68" y1="78" x2="66" y2="107"/><line class="lb" x1="80" y1="80" x2="80" y2="107"/><circle class="jt" cx="102" cy="86" r="2.8"/><circle class="jt" cx="140" cy="94" r="2.8"/></g></svg>`,
+fr_gem:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="128" cy="99" r="8" fill="none" stroke="#F2A93B" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="58" r="8"/><line class="lb" x1="58" y1="64" x2="90" y2="88"/><line class="lb" x1="90" y1="88" x2="128" y2="92"/><line class="lb" x1="128" y1="92" x2="150" y2="94"/><line class="lb" x1="64" y1="72" x2="54" y2="107"/><circle class="jt" cx="90" cy="88" r="2.8"/><circle class="jt" cx="128" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="52" cy="58" r="8"/><line class="lb" x1="58" y1="64" x2="90" y2="88"/><line class="lb" x1="90" y1="88" x2="126" y2="90"/><line class="lb" x1="126" y1="90" x2="148" y2="88"/><line class="lb" x1="64" y1="72" x2="54" y2="107"/><circle class="jt" cx="90" cy="88" r="2.8"/><circle class="jt" cx="126" cy="90" r="2.8"/></g></svg>`,
+fr_psoas:`<svg viewBox="0 0 200 120"><line x1="20" y1="100" x2="185" y2="100" stroke="#2A424E" stroke-width="3"/><circle cx="96" cy="86" r="6" fill="#F2A93B"/>
+<g class="fA"><circle class="h" cx="50" cy="78" r="8"/><line class="lb" x1="58" y1="82" x2="120" y2="86"/><line class="lb" x1="120" y1="86" x2="150" y2="92"/><line class="lb" x1="150" y1="92" x2="168" y2="100"/><circle class="jt" cx="120" cy="86" r="2.8"/><circle class="jt" cx="150" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="50" cy="80" r="8"/><line class="lb" x1="58" y1="84" x2="120" y2="88"/><line class="lb" x1="120" y1="88" x2="150" y2="94"/><line class="lb" x1="150" y1="94" x2="168" y2="100"/><circle class="jt" cx="120" cy="88" r="2.8"/><circle class="jt" cx="150" cy="94" r="2.8"/></g></svg>`,
+fr_dorsal:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="92" cy="99" r="8" fill="none" stroke="#F2A93B" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="50" cy="80" r="8"/><line class="lb" x1="56" y1="84" x2="92" y2="90"/><line class="lb" x1="56" y1="80" x2="34" y2="62"/><line class="lb" x1="92" y1="90" x2="126" y2="80"/><line class="lb" x1="126" y1="80" x2="140" y2="107"/><circle class="jt" cx="92" cy="90" r="2.8"/><circle class="jt" cx="126" cy="80" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="56" cy="82" r="8"/><line class="lb" x1="62" y1="86" x2="98" y2="90"/><line class="lb" x1="62" y1="82" x2="40" y2="64"/><line class="lb" x1="98" y1="90" x2="132" y2="80"/><line class="lb" x1="132" y1="80" x2="146" y2="107"/><circle class="jt" cx="98" cy="90" r="2.8"/><circle class="jt" cx="132" cy="80" r="2.8"/></g></svg>`,
+jg_animal:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="62" r="8"/><line class="lb" x1="58" y1="68" x2="88" y2="84"/><line class="lb" x1="60" y1="70" x2="52" y2="107"/><line class="lb" x1="88" y1="84" x2="96" y2="107"/><line class="lb" x1="64" y1="74" x2="76" y2="107"/><circle class="jt" cx="88" cy="84" r="2.8"/><circle class="h" cx="132" cy="76" r="6"/><line class="lb" x1="136" y1="81" x2="156" y2="92"/><line class="lb" x1="138" y1="82" x2="132" y2="107"/><line class="lb" x1="156" y1="92" x2="162" y2="107"/><circle class="jt" cx="156" cy="92" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="58" cy="64" r="8"/><line class="lb" x1="64" y1="70" x2="94" y2="84"/><line class="lb" x1="66" y1="72" x2="60" y2="107"/><line class="lb" x1="94" y1="84" x2="100" y2="107"/><line class="lb" x1="70" y1="76" x2="82" y2="107"/><circle class="jt" cx="94" cy="84" r="2.8"/><circle class="h" cx="138" cy="78" r="6"/><line class="lb" x1="142" y1="83" x2="162" y2="93"/><line class="lb" x1="144" y1="84" x2="140" y2="107"/><line class="lb" x1="162" y1="93" x2="166" y2="107"/><circle class="jt" cx="162" cy="93" r="2.4"/></g></svg>`,
+jg_carretilla:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="140" cy="46" r="8"/><line class="lb" x1="140" y1="54" x2="138" y2="86"/><line class="lb" x1="138" y1="86" x2="130" y2="107"/><line class="lb" x1="138" y1="86" x2="148" y2="107"/><line class="lb" x1="138" y1="62" x2="112" y2="76"/><circle class="jt" cx="138" cy="86" r="2.8"/><circle class="h" cx="58" cy="72" r="6"/><line class="lb" x1="64" y1="76" x2="96" y2="78"/><line class="lb" x1="64" y1="78" x2="58" y2="107"/><line class="lb" x1="72" y1="77" x2="70" y2="107"/><line class="lb" x1="96" y1="78" x2="112" y2="76"/><circle class="jt" cx="96" cy="78" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="144" cy="46" r="8"/><line class="lb" x1="144" y1="54" x2="142" y2="86"/><line class="lb" x1="142" y1="86" x2="134" y2="107"/><line class="lb" x1="142" y1="86" x2="152" y2="107"/><line class="lb" x1="142" y1="62" x2="116" y2="76"/><circle class="jt" cx="142" cy="86" r="2.8"/><circle class="h" cx="64" cy="74" r="6"/><line class="lb" x1="70" y1="78" x2="100" y2="78"/><line class="lb" x1="70" y1="80" x2="66" y2="107"/><line class="lb" x1="78" y1="79" x2="78" y2="107"/><line class="lb" x1="100" y1="78" x2="116" y2="76"/><circle class="jt" cx="100" cy="78" r="2.4"/></g></svg>`,
+jg_empuje:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="70" cy="50" r="8"/><line class="lb" x1="74" y1="58" x2="86" y2="84"/><line class="lb" x1="86" y1="84" x2="78" y2="107"/><line class="lb" x1="86" y1="84" x2="98" y2="107"/><line class="lb" x1="78" y1="64" x2="104" y2="70"/><circle class="jt" cx="86" cy="84" r="2.8"/><circle class="h" cx="132" cy="62" r="6"/><line class="lb" x1="128" y1="67" x2="118" y2="88"/><line class="lb" x1="118" y1="88" x2="112" y2="107"/><line class="lb" x1="118" y1="88" x2="128" y2="107"/><line class="lb" x1="126" y1="72" x2="104" y2="70"/><circle class="jt" cx="118" cy="88" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="72" cy="52" r="8"/><line class="lb" x1="76" y1="60" x2="88" y2="86"/><line class="lb" x1="88" y1="86" x2="80" y2="107"/><line class="lb" x1="88" y1="86" x2="100" y2="107"/><line class="lb" x1="80" y1="66" x2="106" y2="72"/><circle class="jt" cx="88" cy="86" r="2.8"/><circle class="h" cx="130" cy="64" r="6"/><line class="lb" x1="126" y1="69" x2="116" y2="90"/><line class="lb" x1="116" y1="90" x2="110" y2="107"/><line class="lb" x1="116" y1="90" x2="126" y2="107"/><line class="lb" x1="124" y1="74" x2="106" y2="72"/><circle class="jt" cx="116" cy="90" r="2.4"/></g></svg>`,
+jg_tira:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/><line x1="88" y1="72" x2="118" y2="74" stroke="#F2A93B" stroke-width="4" stroke-linecap="round"/>
+<g class="fA"><circle class="h" cx="62" cy="54" r="8"/><line class="lb" x1="66" y1="62" x2="76" y2="88"/><line class="lb" x1="76" y1="88" x2="66" y2="107"/><line class="lb" x1="76" y1="88" x2="88" y2="107"/><line class="lb" x1="70" y1="66" x2="88" y2="72"/><circle class="jt" cx="76" cy="88" r="2.8"/><circle class="h" cx="146" cy="60" r="6"/><line class="lb" x1="142" y1="65" x2="134" y2="90"/><line class="lb" x1="134" y1="90" x2="126" y2="107"/><line class="lb" x1="134" y1="90" x2="144" y2="107"/><line class="lb" x1="140" y1="70" x2="118" y2="74"/><circle class="jt" cx="134" cy="90" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="58" cy="56" r="8"/><line class="lb" x1="62" y1="64" x2="72" y2="90"/><line class="lb" x1="72" y1="90" x2="62" y2="107"/><line class="lb" x1="72" y1="90" x2="84" y2="107"/><line class="lb" x1="66" y1="68" x2="88" y2="72"/><circle class="jt" cx="72" cy="90" r="2.8"/><circle class="h" cx="150" cy="62" r="6"/><line class="lb" x1="146" y1="67" x2="138" y2="92"/><line class="lb" x1="138" y1="92" x2="130" y2="107"/><line class="lb" x1="138" y1="92" x2="148" y2="107"/><line class="lb" x1="144" y1="72" x2="118" y2="74"/><circle class="jt" cx="138" cy="92" r="2.4"/></g></svg>`,
+jg_avion:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="86" cy="88" r="8"/><line class="lb" x1="94" y1="90" x2="128" y2="92"/><line class="lb" x1="128" y1="92" x2="148" y2="107"/><line class="lb" x1="104" y1="90" x2="106" y2="66"/><line class="lb" x1="118" y1="91" x2="120" y2="68"/><circle class="jt" cx="128" cy="92" r="2.8"/><circle class="h" cx="96" cy="42" r="6"/><line class="lb" x1="102" y1="46" x2="126" y2="50"/><line class="lb" x1="126" y1="50" x2="142" y2="52"/><line class="lb" x1="104" y1="44" x2="92" y2="34"/><circle class="jt" cx="126" cy="50" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="86" cy="88" r="8"/><line class="lb" x1="94" y1="90" x2="128" y2="92"/><line class="lb" x1="128" y1="92" x2="148" y2="107"/><line class="lb" x1="104" y1="90" x2="108" y2="62"/><line class="lb" x1="118" y1="91" x2="122" y2="64"/><circle class="jt" cx="128" cy="92" r="2.8"/><circle class="h" cx="98" cy="38" r="6"/><line class="lb" x1="104" y1="42" x2="128" y2="46"/><line class="lb" x1="128" y1="46" x2="144" y2="48"/><line class="lb" x1="106" y1="40" x2="94" y2="30"/><circle class="jt" cx="128" cy="46" r="2.4"/></g></svg>`,
+jg_semaforo:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="170" cy="40" r="7" fill="#E2574C"/><circle cx="170" cy="58" r="7" fill="#7BC96F"/>
+<g class="fA"><circle class="h" cx="60" cy="46" r="8"/><line class="lb" x1="60" y1="54" x2="60" y2="86"/><line class="lb" x1="60" y1="86" x2="50" y2="107"/><line class="lb" x1="60" y1="86" x2="72" y2="107"/><line class="lb" x1="60" y1="62" x2="42" y2="46"/><line class="lb" x1="60" y1="62" x2="78" y2="48"/><circle class="jt" cx="60" cy="86" r="2.8"/><circle class="h" cx="116" cy="58" r="6"/><line class="lb" x1="116" y1="64" x2="116" y2="90"/><line class="lb" x1="116" y1="90" x2="108" y2="107"/><line class="lb" x1="116" y1="90" x2="124" y2="107"/><line class="lb" x1="116" y1="70" x2="102" y2="58"/><line class="lb" x1="116" y1="70" x2="130" y2="60"/><circle class="jt" cx="116" cy="90" r="2.4"/></g>
+<g class="fB"><circle class="h" cx="60" cy="46" r="8"/><line class="lb" x1="60" y1="54" x2="60" y2="86"/><line class="lb" x1="60" y1="86" x2="50" y2="107"/><line class="lb" x1="60" y1="86" x2="72" y2="107"/><line class="lb" x1="60" y1="62" x2="42" y2="46"/><line class="lb" x1="60" y1="62" x2="78" y2="48"/><circle class="jt" cx="60" cy="86" r="2.8"/><circle class="h" cx="116" cy="58" r="6"/><line class="lb" x1="116" y1="64" x2="116" y2="90"/><line class="lb" x1="116" y1="90" x2="108" y2="107"/><line class="lb" x1="116" y1="90" x2="124" y2="107"/><line class="lb" x1="116" y1="70" x2="102" y2="58"/><line class="lb" x1="116" y1="70" x2="130" y2="60"/><circle class="jt" cx="116" cy="90" r="2.4"/></g></svg>`,
+jg_sandwich:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/><rect x="70" y="80" width="70" height="10" rx="5" fill="none" stroke="#3EC9D9" stroke-width="2.5"/><rect x="66" y="62" width="78" height="10" rx="5" fill="none" stroke="#F2A93B" stroke-width="2.5"/>
+<g class="fA"><circle class="h" cx="54" cy="72" r="6"/><line class="lb" x1="60" y1="74" x2="70" y2="76"/></g>
+<g class="fB"><circle class="h" cx="54" cy="74" r="6"/><line class="lb" x1="60" y1="76" x2="70" y2="78"/></g></svg>`,
+sf_gorila:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="118" cy="58" r="8"/><line class="lb" x1="114" y1="66" x2="96" y2="84"/><line class="lb" x1="96" y1="84" x2="86" y2="107"/><line class="lb" x1="96" y1="84" x2="106" y2="107"/><line class="lb" x1="112" y1="70" x2="138" y2="96"/><line class="lb" x1="138" y1="96" x2="140" y2="107"/><circle class="jt" cx="96" cy="84" r="2.8"/><circle class="jt" cx="138" cy="96" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="124" cy="60" r="8"/><line class="lb" x1="120" y1="68" x2="102" y2="86"/><line class="lb" x1="102" y1="86" x2="92" y2="107"/><line class="lb" x1="102" y1="86" x2="112" y2="107"/><line class="lb" x1="118" y1="72" x2="146" y2="98"/><line class="lb" x1="146" y1="98" x2="148" y2="107"/><circle class="jt" cx="102" cy="86" r="2.8"/><circle class="jt" cx="146" cy="98" r="2.8"/></g></svg>`,
+sf_escorpion:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="52" cy="88" r="8"/><line class="lb" x1="60" y1="90" x2="100" y2="92"/><line class="lb" x1="56" y1="94" x2="54" y2="107"/><line class="lb" x1="100" y1="92" x2="132" y2="94"/><line class="lb" x1="132" y1="94" x2="150" y2="107"/><line class="lb" x1="100" y1="92" x2="118" y2="62"/><line class="lb" x1="118" y1="62" x2="104" y2="44"/><circle class="jt" cx="100" cy="92" r="2.8"/><circle class="jt" cx="118" cy="62" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="52" cy="88" r="8"/><line class="lb" x1="60" y1="90" x2="100" y2="92"/><line class="lb" x1="56" y1="94" x2="54" y2="107"/><line class="lb" x1="100" y1="92" x2="132" y2="94"/><line class="lb" x1="132" y1="94" x2="150" y2="107"/><line class="lb" x1="100" y1="92" x2="122" y2="66"/><line class="lb" x1="122" y1="66" x2="140" y2="56"/><circle class="jt" cx="100" cy="92" r="2.8"/><circle class="jt" cx="122" cy="66" r="2.8"/></g></svg>`,
+sf_lagarto:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="150" cy="92" r="8"/><line class="lb" x1="142" y1="94" x2="104" y2="96"/><line class="lb" x1="104" y1="96" x2="66" y2="94"/><line class="lb" x1="130" y1="95" x2="122" y2="107"/><line class="lb" x1="88" y1="96" x2="72" y2="107"/><line class="lb" x1="66" y1="94" x2="52" y2="107"/><circle class="jt" cx="104" cy="96" r="2.8"/><circle class="jt" cx="66" cy="94" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="154" cy="90" r="8"/><line class="lb" x1="146" y1="92" x2="108" y2="94"/><line class="lb" x1="108" y1="94" x2="70" y2="94"/><line class="lb" x1="136" y1="93" x2="144" y2="107"/><line class="lb" x1="92" y1="94" x2="84" y2="107"/><line class="lb" x1="70" y1="94" x2="56" y2="107"/><circle class="jt" cx="108" cy="94" r="2.8"/><circle class="jt" cx="70" cy="94" r="2.8"/></g></svg>`,
+sf_elefante:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="82" cy="72" r="8"/><line class="lb" x1="86" y1="78" x2="108" y2="60"/><line class="lb" x1="108" y1="60" x2="122" y2="82"/><line class="lb" x1="122" y1="82" x2="126" y2="107"/><line class="lb" x1="108" y1="60" x2="116" y2="86"/><line class="lb" x1="84" y1="80" x2="74" y2="107"/><line class="lb" x1="88" y1="80" x2="88" y2="107"/><circle class="jt" cx="108" cy="60" r="2.8"/><circle class="jt" cx="122" cy="82" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="88" cy="74" r="8"/><line class="lb" x1="92" y1="80" x2="112" y2="62"/><line class="lb" x1="112" y1="62" x2="126" y2="84"/><line class="lb" x1="126" y1="84" x2="130" y2="107"/><line class="lb" x1="112" y1="62" x2="120" y2="88"/><line class="lb" x1="90" y1="82" x2="82" y2="107"/><line class="lb" x1="94" y1="82" x2="96" y2="107"/><circle class="jt" cx="112" cy="62" r="2.8"/><circle class="jt" cx="126" cy="84" r="2.8"/></g></svg>`,
+sf_oso2:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="142" cy="66" r="8"/><line class="lb" x1="136" y1="72" x2="108" y2="56"/><line class="lb" x1="108" y1="56" x2="80" y2="72"/><line class="lb" x1="138" y1="74" x2="144" y2="107"/><line class="lb" x1="128" y1="70" x2="126" y2="107"/><line class="lb" x1="84" y1="76" x2="72" y2="107"/><line class="lb" x1="94" y1="70" x2="92" y2="107"/><circle class="jt" cx="108" cy="56" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="148" cy="68" r="8"/><line class="lb" x1="142" y1="74" x2="114" y2="58"/><line class="lb" x1="114" y1="58" x2="86" y2="74"/><line class="lb" x1="144" y1="76" x2="152" y2="107"/><line class="lb" x1="134" y1="72" x2="130" y2="107"/><line class="lb" x1="90" y1="78" x2="80" y2="107"/><line class="lb" x1="100" y1="72" x2="100" y2="107"/><circle class="jt" cx="114" cy="58" r="2.8"/></g></svg>`,
+sf_bestia:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="140" cy="70" r="8"/><line class="lb" x1="134" y1="76" x2="106" y2="72"/><line class="lb" x1="106" y1="72" x2="82" y2="86"/><line class="lb" x1="130" y1="78" x2="138" y2="107"/><line class="lb" x1="118" y1="75" x2="112" y2="107"/><line class="lb" x1="82" y1="86" x2="66" y2="107"/><line class="lb" x1="92" y1="80" x2="94" y2="100"/><circle class="jt" cx="106" cy="72" r="2.8"/><circle class="jt" cx="82" cy="86" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="146" cy="68" r="8"/><line class="lb" x1="140" y1="74" x2="112" y2="70"/><line class="lb" x1="112" y1="70" x2="88" y2="84"/><line class="lb" x1="136" y1="76" x2="130" y2="100"/><line class="lb" x1="124" y1="73" x2="128" y2="107"/><line class="lb" x1="88" y1="84" x2="80" y2="107"/><line class="lb" x1="98" y1="78" x2="90" y2="107"/><circle class="jt" cx="112" cy="70" r="2.8"/><circle class="jt" cx="88" cy="84" r="2.8"/></g></svg>`,
+sf_gatovaca:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="146" cy="74" r="8"/><line class="lb" x1="138" y1="78" x2="118" y2="64"/><line class="lb" x1="118" y1="64" x2="96" y2="64"/><line class="lb" x1="96" y1="64" x2="78" y2="78"/><line class="lb" x1="136" y1="80" x2="136" y2="107"/><line class="lb" x1="80" y1="80" x2="80" y2="107"/><circle class="jt" cx="118" cy="64" r="2.8"/><circle class="jt" cx="96" cy="64" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="146" cy="62" r="8"/><line class="lb" x1="138" y1="68" x2="118" y2="82"/><line class="lb" x1="118" y1="82" x2="96" y2="82"/><line class="lb" x1="96" y1="82" x2="78" y2="68"/><line class="lb" x1="136" y1="72" x2="136" y2="107"/><line class="lb" x1="80" y1="72" x2="80" y2="107"/><circle class="jt" cx="118" cy="82" r="2.8"/><circle class="jt" cx="96" cy="82" r="2.8"/></g></svg>`,
+sf_ganso:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="96" cy="40" r="8"/><line class="lb" x1="96" y1="48" x2="98" y2="76"/><line class="lb" x1="96" y1="54" x2="96" y2="24"/><line class="lb" x1="98" y1="76" x2="80" y2="92"/><line class="lb" x1="80" y1="92" x2="78" y2="107"/><line class="lb" x1="98" y1="76" x2="128" y2="96"/><line class="lb" x1="128" y1="96" x2="146" y2="107"/><circle class="jt" cx="98" cy="76" r="2.8"/><circle class="jt" cx="80" cy="92" r="2.8"/><circle class="jt" cx="128" cy="96" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="102" cy="42" r="8"/><line class="lb" x1="102" y1="50" x2="104" y2="78"/><line class="lb" x1="102" y1="56" x2="102" y2="26"/><line class="lb" x1="104" y1="78" x2="86" y2="94"/><line class="lb" x1="86" y1="94" x2="84" y2="107"/><line class="lb" x1="104" y1="78" x2="134" y2="98"/><line class="lb" x1="134" y1="98" x2="152" y2="107"/><circle class="jt" cx="104" cy="78" r="2.8"/><circle class="jt" cx="86" cy="94" r="2.8"/><circle class="jt" cx="134" cy="98" r="2.8"/></g></svg>`,
+sf_orangutan:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="118" cy="62" r="8"/><line class="lb" x1="112" y1="68" x2="90" y2="92"/><line class="lb" x1="90" y1="92" x2="86" y2="107"/><line class="lb" x1="122" y1="70" x2="146" y2="94"/><line class="lb" x1="146" y1="94" x2="150" y2="107"/><line class="lb" x1="116" y1="70" x2="108" y2="94"/><line class="lb" x1="120" y1="70" x2="124" y2="94"/><circle class="jt" cx="90" cy="92" r="2.8"/><circle class="jt" cx="146" cy="94" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="118" cy="54" r="8"/><line class="lb" x1="112" y1="60" x2="88" y2="88"/><line class="lb" x1="88" y1="88" x2="84" y2="107"/><line class="lb" x1="124" y1="62" x2="148" y2="90"/><line class="lb" x1="148" y1="90" x2="152" y2="107"/><line class="lb" x1="114" y1="62" x2="102" y2="82"/><line class="lb" x1="122" y1="62" x2="130" y2="82"/><circle class="jt" cx="88" cy="88" r="2.8"/><circle class="jt" cx="148" cy="90" r="2.8"/></g></svg>`,
+sf_mariposa:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="100" cy="46" r="8"/><line class="lb" x1="100" y1="54" x2="100" y2="82"/><line class="lb" x1="100" y1="82" x2="76" y2="92"/><line class="lb" x1="76" y1="92" x2="96" y2="100"/><line class="lb" x1="100" y1="82" x2="124" y2="92"/><line class="lb" x1="124" y1="92" x2="104" y2="100"/><line class="lb" x1="100" y1="64" x2="80" y2="86"/><line class="lb" x1="100" y1="64" x2="120" y2="86"/><circle class="jt" cx="76" cy="92" r="2.8"/><circle class="jt" cx="124" cy="92" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="46" r="8"/><line class="lb" x1="100" y1="54" x2="100" y2="82"/><line class="lb" x1="100" y1="82" x2="74" y2="96"/><line class="lb" x1="74" y1="96" x2="96" y2="102"/><line class="lb" x1="100" y1="82" x2="126" y2="96"/><line class="lb" x1="126" y1="96" x2="104" y2="102"/><line class="lb" x1="100" y1="64" x2="78" y2="90"/><line class="lb" x1="100" y1="64" x2="122" y2="90"/><circle class="jt" cx="74" cy="96" r="2.8"/><circle class="jt" cx="126" cy="96" r="2.8"/></g></svg>`,
+ib_birddog:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/><rect x="60" y="88" width="80" height="8" rx="3" fill="none" stroke="#2A424E" stroke-width="2.5"/>
+<g class="fA"><circle class="h" cx="146" cy="62" r="8"/><line class="lb" x1="138" y1="66" x2="100" y2="66"/><line class="lb" x1="100" y1="66" x2="64" y2="60"/><line class="lb" x1="134" y1="68" x2="134" y2="88"/><line class="lb" x1="104" y1="68" x2="104" y2="88"/><line class="wt" x1="128" y1="80" x2="140" y2="80"/><circle class="jt" cx="100" cy="66" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="146" cy="62" r="8"/><line class="lb" x1="138" y1="66" x2="100" y2="66"/><line class="lb" x1="100" y1="66" x2="64" y2="60"/><line class="lb" x1="134" y1="68" x2="132" y2="76"/><line class="lb" x1="104" y1="68" x2="104" y2="88"/><line class="wt" x1="126" y1="72" x2="138" y2="72"/><circle class="jt" cx="100" cy="66" r="2.8"/></g></svg>`,
+ib_sideplank:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="56" cy="60" r="8"/><line class="lb" x1="62" y1="66" x2="104" y2="80"/><line class="lb" x1="104" y1="80" x2="146" y2="94"/><line class="lb" x1="146" y1="94" x2="164" y2="100"/><line class="lb" x1="70" y1="70" x2="70" y2="107"/><circle class="jt" cx="104" cy="80" r="2.8"/><circle class="jt" cx="146" cy="94" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="56" cy="58" r="8"/><line class="lb" x1="62" y1="64" x2="104" y2="78"/><line class="lb" x1="104" y1="78" x2="146" y2="92"/><line class="lb" x1="146" y1="92" x2="160" y2="78"/><line class="lb" x1="70" y1="68" x2="70" y2="107"/><circle class="jt" cx="104" cy="78" r="2.8"/><circle class="jt" cx="146" cy="92" r="2.8"/></g></svg>`,
+ib_stirpot:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/><circle cx="72" cy="90" r="16" fill="none" stroke="#3EC9D9" stroke-width="2.5"/>
+<g class="fA"><circle class="h" cx="150" cy="62" r="8"/><line class="lb" x1="142" y1="66" x2="104" y2="70"/><line class="lb" x1="104" y1="70" x2="76" y2="78"/><line class="lb" x1="138" y1="68" x2="146" y2="107"/><line class="lb" x1="126" y1="68" x2="130" y2="107"/><circle class="jt" cx="104" cy="70" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="152" cy="64" r="8"/><line class="lb" x1="144" y1="68" x2="106" y2="72"/><line class="lb" x1="106" y1="72" x2="80" y2="82"/><line class="lb" x1="140" y1="70" x2="148" y2="107"/><line class="lb" x1="128" y1="70" x2="132" y2="107"/><circle class="jt" cx="106" cy="72" r="2.8"/></g></svg>`,
+ib_slam:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="96" cy="34" r="8"/><line class="lb" x1="96" y1="42" x2="98" y2="76"/><line class="lb" x1="98" y1="76" x2="84" y2="107"/><line class="lb" x1="98" y1="76" x2="112" y2="107"/><line class="lb" x1="96" y1="50" x2="118" y2="28"/><circle cx="124" cy="24" r="7" fill="#F2A93B"/><circle class="jt" cx="98" cy="76" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="100" cy="46" r="8"/><line class="lb" x1="100" y1="54" x2="100" y2="82"/><line class="lb" x1="100" y1="82" x2="86" y2="107"/><line class="lb" x1="100" y1="82" x2="114" y2="107"/><line class="lb" x1="100" y1="60" x2="122" y2="88"/><circle cx="128" cy="94" r="7" fill="#F2A93B"/><circle class="jt" cx="100" cy="82" r="2.8"/></g></svg>`,
+ib_rdl:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="80" cy="56" r="8"/><line class="lb" x1="86" y1="60" x2="114" y2="68"/><line class="lb" x1="114" y1="68" x2="116" y2="107"/><line class="lb" x1="114" y1="68" x2="146" y2="72"/><line class="lb" x1="88" y1="62" x2="86" y2="88"/><line class="wt" x1="80" y1="88" x2="94" y2="88"/><circle class="jt" cx="114" cy="68" r="2.8"/><circle class="jt" cx="146" cy="72" r="2.8"/></g>
+<g class="fB"><circle class="h" cx="112" cy="30" r="8"/><line class="lb" x1="112" y1="38" x2="114" y2="72"/><line class="lb" x1="114" y1="72" x2="114" y2="107"/><line class="lb" x1="114" y1="52" x2="112" y2="22"/><line class="wt" x1="106" y1="18" x2="120" y2="18"/><circle class="jt" cx="114" cy="72" r="2.8"/></g></svg>`,
+ib_wood:`<svg viewBox="0 0 200 120"><line x1="15" y1="107" x2="190" y2="107" stroke="#2A424E" stroke-width="3"/>
+<g class="fA"><circle class="h" cx="96" cy="42" r="8"/><line class="lb" x1="96" y1="50" x2="100" y2="80"/><line class="lb" x1="100" y1="80" x2="86" y2="107"/><line class="lb" x1="100" y1="80" x2="116" y2="107"/><line class="lb" x1="96" y1="56" x2="126" y2="34"/><circle class="jt" cx="100" cy="80" r="2.8"/><circle cx="132" cy="30" r="5" fill="#F2A93B"/></g>
+<g class="fB"><circle class="h" cx="100" cy="48" r="8"/><line class="lb" x1="100" y1="56" x2="104" y2="84"/><line class="lb" x1="104" y1="84" x2="90" y2="107"/><line class="lb" x1="104" y1="84" x2="120" y2="107"/><line class="lb" x1="100" y1="62" x2="72" y2="90"/><circle class="jt" cx="104" cy="84" r="2.8"/><circle cx="66" cy="96" r="5" fill="#F2A93B"/></g></svg>`,
+st_psoas:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="88" cy="30" r="8"/><line class="lb" x1="88" y1="38" x2="92" y2="66"/><line class="lb" x1="92" y1="66" x2="60" y2="90" stroke="#F2A93B"/><line class="lb" x1="60" y1="90" x2="40" y2="107" stroke="#F2A93B"/><line class="lb" x1="92" y1="66" x2="128" y2="88"/><line class="lb" x1="128" y1="88" x2="150" y2="88"/><circle class="jt" cx="92" cy="66" r="2.8"/><circle class="jt" cx="60" cy="90" r="2.8"/><circle class="jt" cx="128" cy="88" r="2.8"/></svg>`,
+st_isq:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="60" cy="40" r="8"/><line class="lb" x1="60" y1="48" x2="64" y2="80"/><line class="lb" x1="64" y1="80" x2="150" y2="78" stroke="#F2A93B"/><line class="lb" x1="60" y1="52" x2="120" y2="74"/><circle class="jt" cx="64" cy="80" r="2.8"/></svg>`,
+st_cuad:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="100" cy="24" r="8"/><line class="lb" x1="100" y1="32" x2="100" y2="72"/><line class="lb" x1="100" y1="72" x2="96" y2="107"/><line class="lb" x1="100" y1="72" x2="118" y2="96" stroke="#F2A93B"/><line class="lb" x1="118" y1="96" x2="108" y2="70" stroke="#F2A93B"/><circle class="jt" cx="100" cy="72" r="2.8"/><circle class="jt" cx="118" cy="96" r="2.8"/></svg>`,
+st_glut:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="50" cy="60" r="8"/><line class="lb" x1="58" y1="64" x2="100" y2="72"/><line class="lb" x1="100" y1="72" x2="120" y2="50" stroke="#F2A93B"/><line class="lb" x1="100" y1="72" x2="118" y2="96"/><line class="lb" x1="110" y1="60" x2="128" y2="66"/><circle class="jt" cx="100" cy="72" r="2.8"/></svg>`,
+st_pecho:`<svg viewBox="0 0 200 120"><line x1="150" y1="10" x2="150" y2="110" stroke="#2A424E" stroke-width="4"/><circle class="h" cx="100" cy="30" r="8"/><line class="lb" x1="100" y1="38" x2="100" y2="76"/><line class="lb" x1="100" y1="76" x2="94" y2="107"/><line class="lb" x1="100" y1="76" x2="106" y2="107"/><line class="lb" x1="100" y1="48" x2="140" y2="40" stroke="#F2A93B"/><circle class="jt" cx="100" cy="48" r="2.8"/></svg>`,
+st_dorsal:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="100" cy="40" r="8"/><line class="lb" x1="100" y1="48" x2="96" y2="84"/><line class="lb" x1="96" y1="84" x2="90" y2="107"/><line class="lb" x1="100" y1="52" x2="112" y2="22" stroke="#F2A93B"/><line class="lb" x1="100" y1="56" x2="86" y2="40"/><circle class="jt" cx="100" cy="52" r="2.8"/></svg>`,
+st_hombro:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="100" cy="32" r="8"/><line class="lb" x1="100" y1="40" x2="100" y2="80"/><line class="lb" x1="100" y1="80" x2="94" y2="107"/><line class="lb" x1="100" y1="80" x2="106" y2="107"/><line class="lb" x1="100" y1="50" x2="60" y2="54" stroke="#F2A93B"/><line class="lb" x1="75" y1="52" x2="88" y2="68"/><circle class="jt" cx="100" cy="50" r="2.8"/><circle class="jt" cx="75" cy="52" r="2.8"/></svg>`,
+st_cuello:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="90" cy="30" r="8"/><path d="M92 22 Q104 24 104 36" stroke="#F2A93B" stroke-width="3.5" fill="none" stroke-linecap="round"/><line class="lb" x1="90" y1="38" x2="90" y2="80"/><line class="lb" x1="90" y1="80" x2="84" y2="107"/><line class="lb" x1="90" y1="80" x2="96" y2="107"/><circle class="jt" cx="90" cy="80" r="2.8"/></svg>`,
+st_tri:`<svg viewBox="0 0 200 120"><line x1="20" y1="107" x2="185" y2="107" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="100" cy="34" r="8"/><line class="lb" x1="100" y1="42" x2="100" y2="82"/><line class="lb" x1="100" y1="82" x2="94" y2="107"/><line class="lb" x1="100" y1="82" x2="106" y2="107"/><line class="lb" x1="100" y1="50" x2="108" y2="26" stroke="#F2A93B"/><line class="lb" x1="108" y1="26" x2="88" y2="30" stroke="#F2A93B"/><circle class="jt" cx="100" cy="50" r="2.8"/><circle class="jt" cx="108" cy="26" r="2.8"/></svg>`,
+st_rodpecho:`<svg viewBox="0 0 200 120"><line x1="20" y1="98" x2="185" y2="98" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="56" cy="88" r="8"/><line class="lb" x1="64" y1="88" x2="120" y2="90"/><line class="lb" x1="120" y1="90" x2="108" y2="62" stroke="#F2A93B"/><line class="lb" x1="108" y1="62" x2="92" y2="70" stroke="#F2A93B"/><circle class="jt" cx="120" cy="90" r="2.8"/><circle class="jt" cx="108" cy="62" r="2.8"/></svg>`,
+st_giro:`<svg viewBox="0 0 200 120"><line x1="20" y1="98" x2="185" y2="98" stroke="#2A424E" stroke-width="3"/><circle class="h" cx="60" cy="86" r="8"/><line class="lb" x1="68" y1="88" x2="128" y2="88"/><line class="lb" x1="128" y1="88" x2="116" y2="66" stroke="#F2A93B"/><line class="lb" x1="128" y1="88" x2="146" y2="74"/><line class="lb" x1="90" y1="88" x2="88" y2="68"/><circle class="jt" cx="128" cy="88" r="2.8"/></svg>`,
+st_nino:`<svg viewBox="0 0 200 120"><line x1="20" y1="105" x2="185" y2="105" stroke="#2A424E" stroke-width="3"/><path d="M50 105 Q70 60 110 90 L150 100" stroke="#F2A93B" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle class="h" cx="150" cy="98" r="8"/><line class="lb" x1="110" y1="90" x2="150" y2="70"/><circle class="jt" cx="110" cy="90" r="2.8"/></svg>`,
+st_gato:`<svg viewBox="0 0 200 120"><line x1="20" y1="105" x2="185" y2="105" stroke="#2A424E" stroke-width="3"/><path d="M60 105 L60 72 Q100 50 140 72 L140 105" stroke="#F2A93B" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle class="h" cx="150" cy="70" r="7"/><line class="lb" x1="140" y1="72" x2="152" y2="66"/></svg>`
+};
+
+const EX = {
+hip_thrust:{n:"Hip Thrust",svg:"hip_thrust",tip:"Espalda alta apoyada en banco. Empuja cadera arriba, aprieta glúteo 1\u2033 arriba.",peso:true,alt:["puente","rdl"],chips:["carga"]},
+rdl:{n:"Peso Muerto Rumano (RDL)",svg:"rdl",tip:"Cadera atrás, rodillas semi-flectadas fijas, espalda neutra. En casa: Par B o kettlebells 8/6.",peso:true,par:"B",alt:["hip_thrust","puente","femoral"],chips:["carga"]},
+press_banca:{n:"Press Banca (velocidad)",svg:"press_banca",tip:"Con tu barra de 21 kg: baja 2\u2033 controlado, pausa 1\u2033 en el pecho, sube LO MÁS RÁPIDO posible. La intención de velocidad convierte carga liviana en potencia real.",peso:true,alt:["flexiones","press_manc"],chips:["carga"]},
+push_press:{n:"Push Press (barra)",svg:"press_militar",tip:"Barra al pecho, leve impulso de piernas (flexión mínima) + empuje EXPLOSIVO sobre la cabeza. Transferencia cadera→brazos en versión casa. Rodilla-amigable.",peso:true,alt:["press_militar","arnold"],chips:["carga","surf"]},
+remo_polea:{n:"Remo en Polea",svg:"remo_polea",tip:"Tira hacia el abdomen, codos pegados. No balancees el tronco.",peso:true,alt:["remo_banda"],chips:["carga"]},
+press_militar:{n:"Press Militar",svg:"press_militar",tip:"De pie o sentado. Sube sobre la cabeza sin arquear la lumbar.",peso:true,alt:["press_banca"],chips:["carga"]},
+curl:{n:"Curl Bíceps",svg:"curl",tip:"Codos fijos al costado. Sin impulso. En casa: Par A.",peso:true,par:"A",alt:["remo_banda"],chips:[]},
+triceps:{n:"Tríceps en Polea",svg:"triceps",tip:"Codos fijos, extiende completo abajo.",peso:true,alt:["flexiones"],chips:[]},
+pallof:{n:"Pallof Press",svg:"pallof",tip:"Banda o polea lateral. Extiende brazos al frente resistiendo la rotación. Core surf.",peso:false,rep:"10 por lado",alt:["plancha_alc"],chips:["surf"]},
+plancha_alc:{n:"Plancha con Alcance",svg:"plancha_alc",tip:"Plancha alta, extiende un brazo al frente sin rotar la cadera. Alterna.",peso:false,rep:"8 por lado",alt:["dead_bug"],chips:["surf"]},
+dead_bug:{n:"Dead Bug",svg:"dead_bug",tip:"Lumbar pegada al suelo. Extiende brazo y pierna contrarios, lento.",peso:false,rep:"10 por lado, lento",alt:["plancha_alc"],chips:["surf"]},
+burpee_np:{n:"Burpee sin Salto",svg:"burpee_np",tip:"Paso atrás a plancha (no salto), vuelve y ponte de pie. Patrón pop-up surf.",peso:false,rep:"10 reps",alt:["flexiones"],chips:["surf","rodilla"]},
+flexiones:{n:"Flexiones (push-up)",svg:"flexiones",tip:"Cuerpo recto como tabla, manos bajo los hombros. Baja el pecho cerca del suelo doblando los codos, sube completo. Pecho, hombro frontal y tríceps.",peso:false,rep:"al fallo −2",alt:["pike_pushup","press_banca"],chips:[]},
+pike_pushup:{n:"Pike Push-up (flexión en V)",svg:"pike_pushup",tip:"Cadera arriba formando una V invertida (como perro boca abajo). Baja la cabeza hacia el suelo entre las manos doblando codos. Ataca el deltoides (hombro), no el pecho. Alternativa vertical a la flexión.",peso:false,rep:"al fallo −2",alt:["flexiones"],chips:["surf"]},
+remo_banda:{n:"Remo con Banda",svg:"remo_banda",tip:"Banda anclada. Tira al abdomen, aprieta espalda.",peso:false,alt:["remo_polea"],chips:[]},
+puente:{n:"Puente de Glúteo con Disco",svg:"puente",tip:"Disco sobre la cadera. Sube vértebra a vértebra, aprieta 1\u2033 arriba. Tu hip thrust de casa.",peso:true,alt:["hip_thrust"],chips:["rodilla","carga"]},
+pull_up:{n:"Dominadas (Pull-up)",svg:"pull_up",tip:"Agarre firme, pecho a la barra. Si no salen completas: negativas lentas (salta arriba, baja en 4\u2033).",peso:false,rep:"al fallo −1",alt:["remo_banda"],chips:[]},
+press_manc:{n:"Press con Mancuernas",svg:"press_banca",tip:"En banco, con Par B (pesado, 15 kg c/u = 30 kg). Baja controlado, sube junto. Tu press pesado de casa.",peso:true,par:"B",alt:["flexiones","press_banca"],chips:["carga"]},
+femoral:{n:"Curl Femoral en Banca",svg:"femoral",tip:"Boca abajo o sentado, talones bajo el rodillo. Flecta llevando talones al glúteo, baja lento. Isquios sin cargar la rótula. NO uses la extensión de cuádriceps.",peso:true,alt:["rdl","puente"],chips:["rodilla","carga"]},
+eliptica:{n:"Elíptica — Intervalo",svg:"eliptica",tip:"Cero impacto, ideal rodilla. Ritmo fuerte 40\u2033 / suave 80\u2033.",peso:false,rep:"40\u2033 fuerte + 80\u2033 suave",alt:["bici"],chips:["rodilla"]},
+bici:{n:"Bici — Intervalo",svg:"bici",tip:"Cadencia alta 100+ rpm, resistencia moderada. NUNCA pesado a cadencia baja.",peso:false,rep:"30\u2033 fuerte + 90\u2033 suave",alt:["remo_polea"],chips:["rodilla"]},
+farmer:{n:"Farmer Carry",svg:"farmer",tip:"Mancuernas pesadas a los costados. Camina erguido 20–30 m.",peso:true,alt:["hip_thrust"],chips:["carga"]},
+/* Iron Belt — core golf·surf·snowboard (gym) */
+ib_deadbug90:{n:"90/90 Dead Bug + Press Pared",svg:"dead_bug",tip:"Boca arriba junto a la pared, caderas y rodillas a 90°, palmas EMPUJANDO la pared fuerte (costillas abajo, ombligo a la columna). Baja pierna contraria lenta sin despegar lumbar. El press a la pared enciende el TrA.",peso:false,rep:"3×10 por lado",alt:[],chips:["surf","golf"]},
+ib_rkc:{n:"RKC Plank",svg:"plancha_alc",tip:"Plancha corta de MÁXIMA tensión: aprieta glúteos con todo, tira codos hacia pies sin moverte, cuerpo un solo bloque. 20\u2033 de tensión total valen más que 2\u2032 flojos.",peso:false,rep:"3×20\u2033",alt:[],chips:[]},
+ib_birddog:{n:"Bird-Dog Row (banco)",svg:"ib_birddog",tip:"Rodilla y mano en banco, pierna contraria extendida: rema la mancuerna SIN que la cadera rote un milímetro. Caderas perfectamente niveladas — eso ES el ejercicio.",peso:true,rep:"3×10 por lado",alt:[],chips:["surf"]},
+ib_sideplank:{n:"Side Plank + Abducción",svg:"ib_sideplank",tip:"Plancha lateral firme y la pierna de arriba sube y baja controlada. Glúteo medio + core lateral integrados — el control de canto en la tabla y la estabilidad del swing.",peso:false,rep:"3×8 por lado",alt:[],chips:["snow","golf"]},
+ib_pallofk:{n:"Tall Kneeling Pallof",svg:"pallof",tip:"De rodillas altas (glúteos apretados), extiende cable/banda al frente y RESISTE la rotación. Imita el top del backswing. Ni un grado de giro.",peso:true,rep:"3×12",alt:["pallof"],chips:["golf"]},
+ib_stirpot:{n:"Stir the Pot (fitball)",svg:"ib_stirpot",tip:"Plancha con antebrazos sobre fitball: revuelve la olla en círculos pequeños. Caderas QUIETAS — solo los brazos dibujan el círculo.",peso:false,rep:"3×10 círculos por lado",alt:["plancha_alc"],chips:[]},
+ib_slam:{n:"Rotational Med Ball Slam",svg:"ib_slam",tip:"Balón medicinal: rota y AZOTA al suelo desde la cadera. El chasquido viene del core, no de los brazos. Potencia rotacional pura.",peso:true,rep:"3×8 por lado",alt:[],chips:["surf","golf"]},
+ib_rdl1:{n:"RDL 1 Pierna → Press Arriba",svg:"ib_rdl",tip:"Bisagra a una pierna con mancuerna, y al subir conecta directo en press sobre la cabeza. Estabilidad en múltiples planos. ⚠️ Rodilla: apoyo estable, peso moderado.",peso:true,rep:"3×10 por lado",alt:[],chips:["surf","snow"]},
+ib_wood:{n:"Woodchoppers Alto→Bajo",svg:"ib_wood",tip:"Cable o mancuerna de arriba-afuera hacia abajo-cruzado: leña. La potencia sale de caderas + core bloqueado JUNTOS; los brazos solo guían.",peso:true,rep:"3×15",alt:[],chips:["golf","snow"]},
+/* Drenaje linfático-abdominal — rutina 12 min */
+dr_psoas:{n:"Apertura Psoas y Flexores",svg:"st_psoas",tip:"Zancada de rodilla al suelo, pelvis adelante, brazo del mismo lado estirado arriba. Estírate HACIA ARRIBA y siente la apertura del frente de la cadera. Respira ahí.",peso:false,rep:"60\u2033 por lado",alt:[],chips:[]},
+dr_lumbar:{n:"Descompresión Lumbar en V",svg:"st_rodpecho",tip:"Acostado, rodillas al pecho abrazadas, balancéate suave adelante-atrás y a los lados. Libera la tensión de la espalda baja — sin forzar, es un mecido.",peso:false,rep:"2\u2032",alt:[],chips:[]},
+dr_deadbug:{n:"Dead Bug Controlado",svg:"dead_bug",tip:"Boca arriba, brazo y pierna CONTRARIOS bajan lento y alternado, lumbar pegada al suelo. Movimiento cruzado lento — activa el core profundo y bombea el sistema linfático.",peso:false,rep:"2\u2032 alternando",alt:[],chips:[]},
+dr_giros:{n:"Giros de Tronco Sentado",svg:"st_giro",tip:"Sentado, gira el tronco a un lado y sostén 3 respiraciones, vuelve y al otro. Es un masaje rítmico de los órganos — lento y con respiración.",peso:false,rep:"90\u2033",alt:[],chips:[]},
+dr_puente:{n:"Puente de Glúteo Dinámico",svg:"hip_thrust",tip:"Sube el puente vértebra por vértebra, sostén 2\u2033 arriba apretando glúteo, baja igual de lento vértebra por vértebra. Sin prisa — la bajada ES el ejercicio.",peso:false,rep:"90\u2033 (8-10 subidas)",alt:[],chips:[]},
+dr_vacio:{n:"Respiración de Vacío",svg:"st_gato",tip:"En cuatro apoyos o de pie: exhala TODO, y sin inhalar lleva el ombligo hacia la columna, sostén 8-12\u2033, suelta e inhala. 5-6 ciclos. Si estás recién operada de algo o embarazada: omite este bloque.",peso:false,rep:"3\u2032 (5-6 ciclos)",alt:[],chips:[]},
+/* Safari de Movimiento — post @tobias.bolliger */
+sf_gorila:{n:"1 · Gorilla Walks",svg:"sf_gorila",tip:"Cuclillas profundas, manos al suelo adelante, avanza como gorila. TRABAJA: movilidad de hombro y cadera. Niños: \u0027pisa fuerte como gorila y golpea el pecho al llegar\u0027. ⚠️ Rodilla: profundidad solo hasta donde no moleste.",peso:false,rep:"2-3 cruces",alt:[],chips:[]},
+sf_escorpion:{n:"2 · Scorpion Walks",svg:"sf_escorpion",tip:"Desde plancha, una pierna sube doblada por atrás como cola de escorpión, alterna caminando. TRABAJA: estabilidad y elasticidad del core. Lento y controlado — la cola pica despacio.",peso:false,rep:"6-8 pasos por lado",alt:[],chips:[]},
+sf_lagarto:{n:"3 · Lizard Crawl",svg:"sf_lagarto",tip:"Arrastre bajo, pecho cerca del suelo, codos y rodillas doblados avanzando en diagonal. TRABAJA: fuerza, coordinación y control — el más exigente del safari. Niños: \u0027pasa bajo la reja sin que te vean\u0027.",peso:false,rep:"2 cruces cortos",alt:[],chips:[]},
+sf_elefante:{n:"4 · Elephant Walks",svg:"sf_elefante",tip:"Piernas semi-rígidas, tronco colgando, camina con las manos por el suelo — la trompa. TRABAJA: isquiotibiales y espalda baja. Respira al colgar, no rebotes.",peso:false,rep:"2-3 cruces",alt:[],chips:[]},
+sf_oso2:{n:"5 · Bear Crawl",svg:"sf_oso2",tip:"Cuatro apoyos, caderas altas, mano y pie contrario avanzan juntos. TRABAJA: hombros, muñecas e isquios. Niños: carrera de osos — quien mantenga la forma gana, no el más rápido.",peso:false,rep:"3-4 cruces",alt:[],chips:[]},
+sf_bestia:{n:"6 · Beast Run",svg:"sf_bestia",tip:"El bear crawl acelerado — carrera en cuatro apoyos, rodillas flotando bajas. TRABAJA: potencia total y coordinación. ⚠️ Impacto: rodilla lista y muñecas calientes antes. Niños: la bestia persigue... suave.",peso:false,rep:"3-4 sprints cortos",alt:[],chips:[]},
+sf_gatovaca:{n:"7 · Cat & Cow Rotations",svg:"sf_gatovaca",tip:"En cuatro apoyos: arquea como gato asustado, luego hunde como vaca mirando arriba — y agrega rotaciones a ambos lados. TRABAJA: movilidad de columna completa. Sincroniza con la respiración (gato exhala, vaca inhala).",peso:false,rep:"8-10 ciclos + rotaciones",alt:[],chips:[]},
+sf_ganso:{n:"8 · Goose Walks",svg:"sf_ganso",tip:"Zancada profunda caminada con brazo contrario estirado al cielo — paso de ganso elegante. TRABAJA: movilidad de cadera, tobillo y hombro. ⚠️ Rodilla: zancada corta y controlada, sin dejarte caer.",peso:false,rep:"6-8 pasos por lado",alt:[],chips:[]},
+sf_orangutan:{n:"9 · Orang-Utan Swings",svg:"sf_orangutan",tip:"Manos plantadas al suelo, los pies saltan en bloque hacia las manos y siguen — columpio de orangután. TRABAJA: muñeca, hombro y cadera. Aterriza suave y silencioso — el mono elegante no hace ruido.",peso:false,rep:"6-8 saltos",alt:[],chips:[]},
+sf_mariposa:{n:"10 · Butterfly Pulses (cierre)",svg:"sf_mariposa",tip:"Sentado, plantas de los pies juntas, rodillas aletean suave como mariposa. TRABAJA: movilidad de cadera + bajada de revoluciones. Cierre perfecto: aleteo + 3 respiraciones lentas juntos + pregunta del motor.",peso:false,rep:"60-90\u2033",alt:[],chips:[]},
+/* Juego con niños — regulación, fuerza propia y propiocepción */
+jg_animal:{n:"Carrera de Animales",svg:"jg_animal",tip:"Oso (4 apoyos), cangrejo (boca arriba), rana (saltos), lagartija. Cruzar la pieza y volver, cada uno elige el animal del otro. TRABAJA: fuerza de todo el cuerpo + propiocepción (sentir dónde está cada parte). Pregunta al final: ¿qué animal costó más? ¿dónde lo sentiste?",peso:false,rep:"3-4 cruces por animal",alt:[],chips:[]},
+jg_carretilla:{n:"Carretilla",svg:"jg_carretilla",tip:"Tú sostienes sus piernas (a la altura de rodillas para hacerlo más fácil, tobillos para difícil), él camina con las manos. TRABAJA: hombros, core y \u0027trabajo pesado\u0027 — el input propioceptivo profundo que más regula el sistema nervioso. Turnos cortos, celebra la distancia.",peso:false,rep:"2-3 cruces c/u",alt:[],chips:[]},
+jg_empuje:{n:"Derriba la Montaña",svg:"jg_empuje",tip:"Tú eres la montaña (firme, semiflectado): él empuja con todo para moverte. Tú calibras la resistencia — que le cueste pero LO LOGRE. TRABAJA: conocer su fuerza máxima en un marco seguro. Luego invierte: empuja suave, medio, fuerte a tu orden — eso es fuerza GRADUADA, la base de la autorregulación.",peso:false,rep:"3 rondas de 20-30\u2033",alt:[],chips:[]},
+jg_tira:{n:"Tira y Afloja",svg:"jg_tira",tip:"Con toalla o cuerda. Reglas: se suelta solo a la cuenta de 3, se para al decir \u0027pausa\u0027. TRABAJA: fuerza de agarre y tracción + control de impulsos (parar en plena excitación es ORO de regulación). Deja que gane la mayoría — ganar contra resistencia real construye confianza.",peso:false,rep:"4-5 rondas cortas",alt:[],chips:[]},
+jg_avion:{n:"Avión",svg:"jg_avion",tip:"Tú acostado, tus pies en su cadera/abdomen, manos tomadas, él vuela con cuerpo firme como tabla. TRABAJA: core de ambos, equilibrio, confianza mutua. Dile: \u0027cuerpo de tabla, mirada al frente\u0027. Variar: soltar una mano, contar hasta 10. ⚠️ Adulto: solo sin lesiones activas.",peso:false,rep:"3-4 vuelos de 15-20\u2033",alt:[],chips:[]},
+jg_semaforo:{n:"Semáforo / Estatuas",svg:"jg_semaforo",tip:"Verde = correr/saltar/bailar a full · Rojo = ESTATUA total · Amarillo = cámara lenta. Tú cantas los colores, luego él dirige. TRABAJA: inhibición y cambio de marcha — pasar de acelerado a quieto a voluntad es EL músculo de la regulación. La cámara lenta es la parte más difícil y más valiosa.",peso:false,rep:"5-6 min",alt:[],chips:[]},
+jg_sandwich:{n:"Sándwich + Motor (cierre)",svg:"jg_sandwich",tip:"Sándwich de cojines: él es el relleno, presión firme y pareja con un cojín grande (presión profunda = calma el sistema). Después, acostados: 3 respiraciones lentas juntos y la pregunta del motor: \u0027¿cómo está tu motor — acelerado, justo o lento?\u0027 Aprender a LEER su propio motor es el objetivo de todo el juego.",peso:false,rep:"2-3 min + respiración",alt:[],chips:[]},
+/* Liberación fascial — con rodillo y pelota */
+fr_glut:{n:"Glúteo / Piramidal (rodillo)",svg:"fr_glut",tip:"Sentado sobre el rodillo o pelota, tobillo cruzado sobre rodilla, busca el punto sensible y respira ahí. Presión firme pero respirable — si contienes la respiración, es demasiado.",peso:false,rep:"60\u2033 por lado",alt:[],chips:[]},
+fr_isq:{n:"Isquiotibiales (rodillo)",svg:"fr_isq",tip:"Rodillo bajo el muslo posterior, rueda lento del glúteo a la rodilla. Detente 20\u2033 en los puntos que hablan. Tus isquios de nieve lo agradecen.",peso:false,rep:"60\u2033 por lado",alt:[],chips:[]},
+fr_cuad:{n:"Cuádriceps / Banda IT (rodillo)",svg:"fr_cuad",tip:"Boca abajo, rodillo bajo el muslo frontal, luego gira levemente al lateral (IT). Lento, sin rebotar. La IT duele — presión moderada ahí.",peso:false,rep:"60\u2033 por lado",alt:[],chips:[]},
+fr_gem:{n:"Gemelo / Sóleo (rodillo)",svg:"fr_gem",tip:"Rodillo bajo la pantorrilla, rueda del tobillo a la rodilla. Cruza la otra pierna encima para más presión. Rota el pie para cubrir todo.",peso:false,rep:"45\u2033 por lado",alt:[],chips:[]},
+fr_psoas:{n:"Psoas (pelota)",svg:"fr_psoas",tip:"Boca abajo, pelota entre ombligo y cadera (lateral). Peso gradual, respira LENTO ahí 60\u2033. El psoas guarda estrés — suéltalo con paciencia, nunca con dolor agudo.",peso:false,rep:"60\u2033 por lado",alt:[],chips:[]},
+fr_dorsal:{n:"Dorsal (rodillo bajo axila)",svg:"fr_dorsal",tip:"De lado, rodillo bajo la axila sobre el dorsal, brazo extendido. Rueda corto. Clave para hombro de remada suelto.",peso:false,rep:"45\u2033 por lado",alt:[],chips:["surf"]},
+fr_lumbar:{n:"Descompresión lumbar",svg:"st_rodpecho",tip:"Rodillas al pecho balanceando suave 60\u2033 + giros espinales a cada lado. Cierra la secuencia descomprimiendo la espalda baja.",peso:false,rep:"2\u2032 total",alt:[],chips:[]},
+sentadilla:{n:"Sentadilla",svg:"sentadilla",tip:"Baja como sentándote, rodillas siguen la punta del pie, espalda neutra. Con alta médica: rango completo, sube profundidad y carga progresivo.",peso:true,par:"B",alt:["hip_thrust","zancada"],chips:["carga"]},
+zancada:{n:"Zancada",svg:"zancada",tip:"Paso largo, rodilla trasera cerca del suelo, tronco erguido. Alterna piernas. Mancuernas a los costados para cargar. Muy funcional para snowboard.",peso:true,par:"A",alt:["stepup","hip_thrust"],chips:["carga"]},
+stepup:{n:"Step-up al Cajón",svg:"stepup",tip:"Sube a un cajón/banco firme empujando con el talón, controla la bajada. Unilateral — equilibrio y fuerza para tabla.",peso:true,par:"A",alt:["zancada"],chips:["carga"]},
+boxjump:{n:"Salto al Cajón",svg:"boxjump",tip:"Salto explosivo, aterriza suave y absorbido. Empieza cajón bajo y sube progresivo. Reintroducción de impacto — potencia surf/snowboard.",peso:false,rep:"5–6 saltos",alt:["sentadilla"],chips:[]},
+elev_lat:{n:"Elevaciones Laterales",svg:"elev_lat",tip:"EL constructor de ancho de hombro. Sube a la altura del hombro, codo levemente flexionado, sin impulso. Liviano y estricto gana. Casa: Par A o naranja.",peso:true,par:"A",alt:["arnold"],chips:["carga"]},
+arnold:{n:"Press Arnold",svg:"arnold",tip:"Press que rota de palmas-adentro a palmas-afuera. Trabaja deltoides frontal y lateral juntos. Casa: Par A/B.",peso:true,par:"B",alt:["press_militar","press_manc"],chips:["carga"]},
+face_pull:{n:"Face Pull",svg:"face_pull",tip:"Banda o polea a la altura de la cara. Tira hacia la frente separando las manos. Deltoides posterior + postura — clave para remada y hombro sano.",peso:false,rep:"15 reps",alt:["remo_banda"],chips:["surf"]},
+pullover:{n:"Pull-over",svg:"pullover",tip:"Acostado, mancuerna sobre el pecho, baja atrás de la cabeza y vuelve. Dorsal + serrato — el músculo de la remada de surf. Casa: Par A/B.",peso:true,par:"A",alt:["remo_banda"],chips:["surf","carga"]},
+pushup_exp:{n:"Push-up Explosivo (duck dive)",svg:"pushup_exp",tip:"Flexión bajando controlado y empujando FUERTE (manos despegan si puedes). Es el patrón exacto del pato bajo el agua. Sin salto de pies — rodilla protegida.",peso:false,rep:"6–8 explosivas",alt:["flexiones"],chips:["surf","rodilla"]},
+rot_ext:{n:"Rotación Externa (manguito)",svg:"rot_ext",tip:"Codo pegado al costado 90°, banda al frente, gira el antebrazo hacia afuera. Fortalece el manguito rotador — la pieza que mantiene el hombro sano y sin lesiones. Liviano y estricto.",peso:false,rep:"15 por lado",alt:["face_pull"],chips:["surf"]},
+reverse_fly:{n:"Pájaro (deltoides posterior)",svg:"reverse_fly",tip:"Inclinado hacia adelante, abre los brazos como alas apretando la espalda alta. Aísla deltoides posterior — equilibra el empuje y mejora postura y remada. Casa: Par A o liviano.",peso:true,par:"A",alt:["face_pull"],chips:["surf","carga"]},
+/* Bloques piscina — descansos incluidos en cada bloque */
+sw_cal:{mt:400,n:"Calentamiento",svg:"nado",tip:"Suave, suelta el cuerpo. Respiración bilateral c/3 desde el primer largo.",peso:false,rep:"200 libre + 4×50 técnica /15\u2033",alt:[],chips:[]},
+sw_50f:{mt:400,n:"Serie Fuerte 50s",svg:"nado",tip:"Ritmo fuerte sostenido, RPE 7–8. Respiración c/3.",peso:false,rep:"10×50 fuerte /20\u2033",alt:["sw_pullpal"],chips:[]},
+sw_25s:{mt:200,n:"Sprints 25s",svg:"nado",tip:"Máxima velocidad con técnica. Si cae la velocidad, corta.",peso:false,rep:"8×25 sprint /30\u2033",alt:[],chips:[]},
+sw_100:{mt:400,n:"Ritmo 100s",svg:"nado",tip:"Sostenido, controla la respiración c/3.",peso:false,rep:"4×100 sostenido /20\u2033",alt:["sw_pullpal"],chips:[]},
+sw_400:{mt:1200,n:"Fondo Aeróbico",svg:"nado",tip:"Ritmo conversacional, RPE 5–6. Aquí descargas las piernas del gym.",peso:false,rep:"3×400 (o 2×600) /30\u2033",alt:["sw_pullpal"],chips:[]},
+sw_pir:{mt:1200,n:"Pirámide de esfuerzo 3×400",svg:"nado",tip:"1º suave (RPE 5) → 2º medio (RPE 6) → 3º suave. Respiración c/3. Reactiva sin machacar — ideal tras días sin entrenar.",peso:false,rep:"3×400 pirámide /30\u2033",alt:["sw_400"],chips:[]},
+sw_pal8:{mt:400,n:"Pull Buoy + Paletas — remada",svg:"nado_pull",tip:"8×50 solo brazos con paletas: remada pura para ancho de hombro y surf. Máx 400 m con paletas. Suelta las paletas si el hombro pide.",peso:false,rep:"8×50 /20\u2033",alt:["sw_pullpal"],chips:["surf"]},
+sw_pullpal:{mt:400,n:"Pull Buoy + Paletas",svg:"nado_pull",tip:"Solo brazos — simula remada de surf. Máx 400 m/sesión con paletas (hombros).",peso:false,rep:"4×100 medio, resp. c/3 /20\u2033",alt:[],chips:["surf","rodilla"]},
+sw_tabla:{mt:200,n:"Tabla + Un Brazo",svg:"nado_tabla",tip:"Tu ejercicio favorito: tabla al frente, un brazo rema, respiración c/3. Alterna brazo cada 50.",peso:false,rep:"4×50 /20\u2033",alt:[],chips:["surf"]},
+sw_aletas:{mt:200,n:"Aletas — Técnica",svg:"nado",tip:"Patada desde la cadera, rodilla casi extendida. Velocidad regalada, técnica limpia.",peso:false,rep:"4×50 /15\u2033",alt:[],chips:["rodilla"]},
+sw_para:{mt:100,n:"Paracaídas — controlado",svg:"nado",tip:"Resistencia de brazada a intensidad MEDIA hoy (pre-deporte: activa, no fatiga). Brazada larga y limpia contra la resistencia, sin sprint.",peso:false,rep:"4×25 medio /40\u2033",alt:["sw_pullpal"],chips:["surf"]},
+sw_t_mov:{mt:100,n:"Cierre: espalda + movilidad hombro",svg:"nado",tip:"100 espalda suave + en la parte baja: círculos de hombro, brazos cruzados, apertura de pecho contra el borde. Deja hombros y espalda sueltos para el snowboard.",peso:false,rep:"100 + 3\u2032 movilidad",alt:[],chips:[]},
+sw_esp:{mt:150,n:"Cierre Espalda",svg:"nado",tip:"Espalda suave regenerativa. Respira, afloja.",peso:false,rep:"100–150 suave",alt:[],chips:[]},
+/* Potencia — Pique y Explosión (diseñada con feedback del entrenador de la piscina) */
+sw_p_cal:{mt:400,n:"Calentamiento potencia",svg:"nado",tip:"300 progresivo + 4×25 acelerando cada uno (última brazada rápida). Prepara el sistema nervioso, no lo fatiga. Aplica las correcciones de postura del entrenador desde el primer largo.",peso:false,rep:"300 + 4×25 progresivos /20\u2033",alt:[],chips:[]},
+sw_p_salida:{mt:150,n:"Salidas explosivas de pared",svg:"nado",tip:"Desde la pared: empuje explosivo + 15 m a máxima velocidad, resto del largo suave. La salida simula el pique inicial. Empuje bilateral, controlado.",peso:false,rep:"6× (15 m sprint + resto suave) /45\u2033",alt:["sw_25s"],chips:["surf"]},
+sw_p_sprint:{mt:150,n:"Piques 25 m — descanso completo",svg:"nado",tip:"Sprint máximo con técnica limpia. Descanso LARGO entre cada uno (45–60\u2033) — la potencia real necesita recuperación completa; si baja la velocidad, corta la serie.",peso:false,rep:"6×25 máximo /60\u2033",alt:["sw_25s"],chips:["surf"]},
+sw_p_pique:{mt:300,n:"Pique + remada continua",svg:"nado_pull",tip:"25 m sprint → sin parar → 50 m pull buoy fuerte. Simula el pique para tomar la ola + remada sostenida. El gesto completo del surf.",peso:false,rep:"4× (25 sprint + 50 pull) /60\u2033",alt:["sw_p_sprint"],chips:["surf"]},
+sw_p_esp:{mt:200,n:"Vuelta a la calma",svg:"nado",tip:"200 combinado suave (espalda/libre). Baja pulsaciones, suelta hombros.",peso:false,rep:"200 suave",alt:[],chips:[]},
+/* Piscina hombro/deltoides — mantenimiento, rango cómodo sin dolor */
+sw_h_cal:{mt:350,n:"Calentamiento hombro",svg:"nado",tip:"Suave, círculos de hombro fuera del agua antes de entrar. Despierta ambos deltoides sin forzar.",peso:false,rep:"200 suave + 6×25 progresivo /15\u2033",alt:[],chips:[]},
+sw_h_crol:{mt:300,n:"Crol Técnico — deltoides",svg:"nado",tip:"Crol enfocado en el recobro alto (codo arriba): trabaja deltoides lateral y posterior en rango controlado. Sin apurar, técnica limpia. Molestia hombro → parar.",peso:false,rep:"6×50 técnica /25\u2033",alt:["sw_pullpal"],chips:["surf"]},
+sw_h_pull:{mt:400,n:"Pull Buoy + Paletas — remada",svg:"nado_pull",tip:"Brazada completa solo brazos: deltoides + dorsal. Con paletas para más carga de remada. Máx ~400 m (cuida hombros).",peso:false,rep:"4×100 fuerte, resp. c/3 /25\u2033",alt:["sw_pullpal"],chips:["surf"]},
+sw_h_esp:{mt:200,n:"Espalda — deltoides posterior",svg:"nado",tip:"Nado de espalda: activa deltoides posterior y equilibra el hombro. Rango cómodo.",peso:false,rep:"4×50 espalda /20\u2033",alt:[],chips:["surf"]},
+sw_h_flex:{mt:0,n:"Salida: Flexiones / Pike",svg:"pushup_exp",tip:"Fuera del agua entre sets: flexiones o pike push-up (más hombro). Empuja con intención, cerca del fallo si el hombro responde bien. 2–3 series.",peso:false,rep:"2–3× (10–15)",alt:["flexiones"],chips:[]},
+sw_h_cierre:{mt:100,n:"Cierre suave + movilidad",svg:"nado",tip:"100 espalda suave + círculos de hombro suaves en el agua. Afloja ambos deltoides.",peso:false,rep:"100 suave + movilidad",alt:[],chips:[]},
+sw_transfer:{mt:0,n:"Salida 1: Barra 20 kg — Remo + Press",svg:"pullover",tip:"Fuera del agua, barra olímpica 20 kg: 8 remo inclinado + 8 press sobre cabeza (encadenados). Transferencia cadera→tronco→brazos que alimenta la brazada. 2–3 series entre sets de nado.",peso:false,rep:"2–3× (8 remo + 8 press)",alt:["sw_h_flex"],chips:["surf"]},
+sw_transfer2:{mt:0,n:"Salida 2: Barra 20 kg — Good Morning",svg:"rdl",tip:"Barra 20 kg en la espalda alta: good morning controlado (bisagra de cadera) + push press explosivo. Potencia de cadena posterior para el pop-up del surf. 2 series.",peso:false,rep:"2× (8 good morning + 6 push press)",alt:["sw_transfer"],chips:["surf"]},
+/* Cardio máquina y ruta — sesión de un bloque */
+maq_bici_int:{n:"Bici Estática — Intervalos",svg:"bici",tip:"10\u2032 calent + 8×(30\u2033 cadencia 100+ / 90\u2033 suave) + 5\u2032 cierre. Nunca resistencia alta a cadencia baja.",peso:false,rep:"25–30\u2032 total",alt:["maq_elip_int"],chips:["rodilla"]},
+maq_bici_z2:{n:"Bici Estática — Continuo Z2",svg:"bici",tip:"Cadencia 85–95, resistencia baja-media, RPE 4–5. Puedes leer o ver algo.",peso:false,rep:"30–45\u2032 continuo",alt:["maq_elip_z2"],chips:["rodilla"]},
+maq_elip_int:{n:"Elíptica — Intervalos",svg:"eliptica",tip:"10\u2032 calent + 8×(40\u2033 fuerte / 80\u2033 suave) + 5\u2032 cierre. Cero impacto.",peso:false,rep:"25–30\u2032 total",alt:["maq_bici_int"],chips:["rodilla"]},
+maq_elip_z2:{n:"Elíptica — Continuo Z2",svg:"eliptica",tip:"Ritmo cómodo sostenido, RPE 4–5.",peso:false,rep:"30–45\u2032 continuo",alt:["maq_bici_z2"],chips:["rodilla"]},
+ruta_z2:{n:"Ruta 1 — Bicentenario",svg:"bici",tip:"Casa → Av. Bicentenario → circuito parque + borde Mapocho. Plana. 18–22 km/h, cadencia 80–90, RPE 4–5. Volumen invisible: no cuenta contra el mínimo semanal.",peso:false,rep:"20–30\u2032 Z2",alt:["ruta_arau"],chips:["rodilla"]},
+ruta_arau:{n:"Ruta 2 — Vitacura–Araucano",svg:"bici",tip:"Ciclovía Av. Vitacura → Parque Araucano → vuelta por P. Riesco/Bicentenario. Falso plano: si sube, baja el cambio y mantén cadencia.",peso:false,rep:"40–50\u2032 Z2 · 18–22 km/h",alt:["ruta_z2"],chips:["rodilla"]},
+ruta_sc:{n:"Ruta 3 — San Cristóbal (P. de Valdivia Nte.)",svg:"bici",tip:"~15\u2032 aproximación Z2 + subida 4.5–5 km al 5–6%. Cambio más liviano SIEMPRE, cadencia >75, RPE 6–7 (9–13 km/h está perfecto). Cadencia <70 empujando → media vuelta sin culpa. Bajada: frenos con anticipación. Entra recién tras 2–3 semanas de rutas 1–2 sin molestias.",peso:false,rep:"60–75\u2032 con subida",alt:["ruta_arau"],chips:["rodilla"]},
+ruta_int:{n:"Intervalos — tramo Bicentenario",svg:"bici",tip:"Tramo recto del parque, temprano y despejado: 10\u2032 suave + 6×(1\u2032 a 26–30 km/h cadencia alta / 2\u2032 suave) + vuelta calma.",peso:false,rep:"~30\u2032 total",alt:["ruta_z2"],chips:["rodilla"]}
+};
+
+/* Planes: por lugar y fase → lista ordenada de ejercicios. El tiempo recorta. */
+const PLANES = {
+ gym:{
+  core_iron:{rest:45, reps:"", lista:["ib_deadbug90","ib_rkc","ib_birddog","ib_sideplank","ib_pallofk","ib_stirpot","ib_slam","ib_rdl1","ib_wood"], series:{30:2,60:3,90:3}, corte:{30:5,60:9,90:9}},
+  build:{rest:90, reps:"8–10 reps", lista:["hip_thrust","rdl","press_banca","remo_polea","press_militar","curl","triceps","pallof","plancha_alc","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:6,60:8,90:10}},
+  leanx:{rest:35, reps:"12–15 reps", lista:["bici","hip_thrust","press_banca","remo_polea","press_militar","bici","pallof","dead_bug"], series:{30:2,60:3,90:3}, corte:{30:5,60:7,90:8}},
+  crossshred:{rest:50, reps:"10–12 reps", lista:["bici","farmer","press_militar","remo_polea","pallof","bici","plancha_alc"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:7}},
+  hombro_barra:{rest:75, reps:"8–10 reps", lista:["press_militar","remo_polea","elev_lat","reverse_fly","face_pull","rot_ext","pullover","pushup_exp"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:8}},
+  hombro_sin:{rest:60, reps:"10–12 reps", lista:["arnold","elev_lat","press_manc","reverse_fly","remo_banda","face_pull","rot_ext","pushup_exp"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:8}},
+  pierna_fuerte:{rest:90, reps:"8–10 reps", lista:["sentadilla","rdl","zancada","stepup","hip_thrust","boxjump","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:7}},
+  pierna_light:{rest:75, reps:"10–12 reps", lista:["hip_thrust","rdl","stepup","puente","pallof","dead_bug"], series:{30:3,60:3,90:4}, corte:{30:4,60:6,90:6}}
+ },
+ casa:{
+  build:{rest:90, reps:"8–10 reps", lista:["press_banca","press_manc","rdl","femoral","pull_up","remo_banda","puente","curl","pallof","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:6,60:8,90:10}},
+  leanx:{rest:35, reps:"12–15 reps", lista:["eliptica","burpee_np","press_manc","remo_banda","bici","plancha_alc","dead_bug"], series:{30:2,60:3,90:3}, corte:{30:5,60:6,90:7}},
+  classic:{rest:40, reps:"12–15 reps", lista:["burpee_np","flexiones","remo_banda","puente","plancha_alc","pallof","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:7}},
+  hombro_barra:{rest:75, reps:"8–10 reps", lista:["press_banca","push_press","pull_up","elev_lat","reverse_fly","face_pull","rot_ext","pushup_exp"], series:{30:3,60:4,90:4}, corte:{30:5,60:7,90:8}},
+  hombro_sin:{rest:60, reps:"10–12 reps", lista:["arnold","elev_lat","press_manc","reverse_fly","remo_banda","face_pull","rot_ext","pushup_exp"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:8}},
+  pierna_fuerte:{rest:90, reps:"8–10 reps", lista:["sentadilla","rdl","zancada","stepup","puente","boxjump","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:4,60:6,90:7}},
+  pierna_light:{rest:75, reps:"10–12 reps", lista:["puente","rdl","stepup","femoral","pallof","dead_bug"], series:{30:3,60:3,90:4}, corte:{30:4,60:6,90:6}}
+ },
+ piscina:{
+  build:{rest:40, reps:"", lista:["sw_cal","sw_pir","sw_pullpal","sw_pal8","sw_tabla","sw_esp"], series:{30:1,60:1,90:1}, corte:{30:3,60:4,90:6}},
+  leanx:{rest:40, reps:"", lista:["sw_cal","sw_50f","sw_25s","sw_100","sw_esp"], series:{30:1,60:1,90:1}, corte:{30:3,60:5,90:5}},
+  crossshred:{rest:40, reps:"", lista:["sw_cal","sw_25s","sw_50f","sw_pullpal","sw_esp"], series:{30:1,60:1,90:1}, corte:{30:3,60:5,90:5}},
+  potencia:{rest:60, reps:"", lista:["sw_p_cal","sw_p_salida","sw_p_sprint","sw_transfer2","sw_p_pique","sw_p_esp"], series:{30:1,60:1,90:1}, corte:{30:4,60:6,90:6}},
+  tecnica:{rest:40, reps:"", lista:["sw_cal","sw_tabla","sw_pullpal","sw_aletas","sw_para","sw_t_mov"], series:{30:1,60:1,90:1}, corte:{30:4,60:6,90:6}},
+  hombro:{rest:40, reps:"", lista:["sw_h_cal","sw_h_crol","sw_transfer","sw_h_pull","sw_transfer2","sw_h_esp","sw_h_flex","sw_h_cierre"], series:{30:1,60:1,90:1}, corte:{30:4,60:6,90:8}}
+ },
+ cuerpo:{
+  fascial:{rest:15, reps:"", lista:["fr_glut","fr_isq","fr_cuad","fr_gem","fr_psoas","fr_dorsal","fr_lumbar"], series:{30:1,60:1,90:1}, corte:{30:7,60:7,90:7}},
+  juego:{rest:20, reps:"", lista:["jg_semaforo","jg_animal","jg_carretilla","jg_empuje","jg_tira","jg_avion","jg_sandwich"], series:{30:1,60:1,90:1}, corte:{30:5,60:7,90:7}},
+  drenaje:{rest:10, reps:"", lista:["dr_psoas","dr_lumbar","dr_deadbug","dr_giros","dr_puente","dr_vacio"], series:{30:1,60:1,90:1}, corte:{30:6,60:6,90:6}},
+  safari:{rest:20, reps:"", lista:["sf_gorila","sf_oso2","sf_elefante","sf_gatovaca","sf_escorpion","sf_lagarto","sf_ganso","sf_orangutan","sf_bestia","sf_mariposa"], series:{30:1,60:1,90:1}, corte:{30:6,60:10,90:10}},
+  classic:{rest:40, reps:"12–15 reps", lista:["burpee_np","flexiones","puente","plancha_alc","dead_bug"], series:{30:3,60:4,90:4}, corte:{30:4,60:5,90:5}}
+ },
+ maquina:{
+  intervalos:{rest:0, reps:"", lista:["maq_bici_int"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}},
+  z2:{rest:0, reps:"", lista:["maq_bici_z2"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}}
+ },
+ ruta:{
+  z2:{rest:0, reps:"", lista:["ruta_z2"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}},
+  media:{rest:0, reps:"", lista:["ruta_arau"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}},
+  cerro:{rest:0, reps:"", lista:["ruta_sc"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}},
+  intervalos:{rest:0, reps:"", lista:["ruta_int"], series:{30:1,60:1,90:1}, corte:{30:1,60:1,90:1}}
+ }
+};
+/* Casa Build está ordenado para minimizar cambio de discos: barra de banca primero, luego mancuernas fijas, luego banda/bodyweight. */
+const FASES = {
+ gym:[["core_iron","🛡️ Iron Belt Core","💪FUERZA · Golf·Surf·Snow · antirrotación + potencia rotacional · pre-activación TrA"],["build","Build","💪FUERZA · Hipertrofia general · cargas altas"],["pierna_fuerte","🦵 Pierna Fuerte","💪FUERZA · Sentadilla+zancada+salto · semana BAJA nieve/surf"],["pierna_light","🦵 Pierna Light","💪FUERZA · Cadera-dominante · semana ALTA nieve/surf"],["hombro_barra","💪 Hombro con Barra","💪FUERZA · Press militar + remo barra"],["hombro_sin","💪 Hombro sin Barra","💪FUERZA · Mancuernas + bandas · aislamiento"],["leanx","Lean-X","Metabólico · descansos cortos"],["crossshred","CrossShred","Potencia · full articulaciones"]],
+ casa:[["build","Build Casa","💪FUERZA · Banca + Par B + femoral"],["pierna_fuerte","🦵 Pierna Fuerte","💪FUERZA · Sentadilla+zancada+salto · semana BAJA"],["pierna_light","🦵 Pierna Light","💪FUERZA · Cadera-dominante · semana ALTA"],["hombro_barra","💪 Hombro con Barra","💪FUERZA · Banca + dominadas"],["hombro_sin","💪 Hombro sin Barra","💪FUERZA · Mancuernas + bandas · aislamiento"],["leanx","Lean-X Casa","Elíptica + bici + circuito"],["classic","Classic","Bodyweight + bandas · comodín"]],
+ piscina:[["build","Build — Aeróbico","Fondo suave · descarga piernas · RPE 5–6"],["potencia","⚡ Potencia — Pique y Explosión","Sprints + salidas explosivas + barra · transferencia surf"],["leanx","Lean-X — Metabólico","Series fuertes, descansos cortos"],["crossshred","CrossShred — Potencia","Sprints con descanso largo"],["tecnica","Técnica / TriSwim","Calidad a RPE 5 · ideal pre-deporte · con todo el equipo"],["hombro","💪 Hombro + Deltoides","Los 3 deltoides + barra 20 kg · con salidas de flexiones"]],
+ cuerpo:[["classic","Solo Cuerpo","Sin ningún equipo · donde estés"],["fascial","🌀 Liberación Fascial","Rodillo + pelota · 10-12 min · ideal AM ayunas o post-EMS"],["juego","👦 Juego con Niños","Ejercicio + regulación + propiocepción · con tus hijos o sobrinos"],["safari","🦁 Safari de Movimiento","10 animales · movilidad+fuerza+coordinación · solos o en manada"],["drenaje","💧 Drenaje Linfático","Fascia+linfa+vacío · 12 min · ayunas o antes de dormir"]],
+ maquina:[["intervalos","Intervalos","Bici o elíptica · 25–30\u2032 · cambia con ⇄"],["z2","Continuo Z2","Bici o elíptica · 30–45\u2032 suave"]],
+ ruta:[["z2","Ruta 1 · Bicentenario","20–30\u2032 Z2 plana · diaria"],["media","Ruta 2 · Vitacura–Araucano","40–50\u2032 Z2 media"],["cerro","Ruta 3 · San Cristóbal","60–75\u2032 subida · solo con rodilla estable"],["intervalos","Intervalos","Tramo Bicentenario · plano y seguro"]]
+};
+
+/* ====== RECUPERACIÓN ====== */
+const KEGEL = {
+ base:{n:"Base — aprender el músculo",desc:"El músculo correcto es el que corta el flujo de orina o eleva los testículos. No aprietes glúteo ni abdomen. Respira normal.",items:[["Contrae y sostén",5],["Relaja completo",5],["Contrae y sostén",5],["Relaja completo",5],["Contrae y sostén",5],["Relaja completo",5],["Contrae y sostén",5],["Relaja completo",5],["Contrae y sostén",5],["Relaja completo",5]]},
+ resistencia:{n:"Resistencia — sostenidas largas",desc:"Contracciones de 10\u2033. Mejora el control y la firmeza sostenida. La relajación completa es tan importante como la contracción.",items:[["Contrae y sostén",10],["Relaja",10],["Contrae y sostén",10],["Relaja",10],["Contrae y sostén",10],["Relaja",10],["Contrae y sostén",10],["Relaja",10],["Contrae y sostén",10],["Relaja",10]]},
+ rapidas:{n:"Rápidas — control reflejo",desc:"Contracciones rápidas 1\u2033 on / 1\u2033 off. Entrenan la respuesta veloz que ayuda al control eyaculatorio.",items:[["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1],["Aprieta",1],["Suelta",1]]}
+};
+const ELONG = {
+ tren_inf:{n:"Piernas / Cadera",items:[["Flexor de cadera (psoas) izq",40,"st_psoas"],["Flexor de cadera der",40,"st_psoas"],["Isquios izq (sin dolor rodilla)",30,"st_isq"],["Isquios der",30,"st_isq"],["Cuádriceps izq de pie",30,"st_cuad"],["Cuádriceps der",30,"st_cuad"],["Glúteo figura-4 izq",30,"st_glut"],["Glúteo figura-4 der",30,"st_glut"]]},
+ tren_sup:{n:"Hombros / Pecho / Espalda",items:[["Pecho en marco de puerta",40,"st_pecho"],["Dorsal izq (brazo arriba)",30,"st_dorsal"],["Dorsal der",30,"st_dorsal"],["Hombro cruzado izq",25,"st_hombro"],["Hombro cruzado der",25,"st_hombro"],["Cuello lateral izq",20,"st_cuello"],["Cuello lateral der",20,"st_cuello"]]},
+ nado:{n:"Post-nado (hombros)",items:[["Pecho en marco de puerta",40,"st_pecho"],["Hombro cruzado izq",30,"st_hombro"],["Hombro cruzado der",30,"st_hombro"],["Tríceps sobre cabeza izq",25,"st_tri"],["Tríceps sobre cabeza der",25,"st_tri"]]},
+ lumbar:{n:"Descompresión lumbar (post-snowboard/silla)",items:[["Rodillas al pecho balanceo",40,"st_rodpecho"],["Giro espinal izq en suelo",35,"st_giro"],["Giro espinal der",35,"st_giro"],["Postura del niño",50,"st_nino"],["Gato-camello (movilidad)",40,"st_gato"]]}
+};
+const MEDIT = {
+ conteo:{n:"Conteo de respiraciones",desc:"Tu base. Cuenta 1→10 y vuelve a 1. Te distraes, vuelves al 1 sin juicio.",min:[5,8,10,15],guide:"Respira normal. Inhala (1), exhala. Inhala (2)... hasta 10, y reinicia."},
+ escaneo:{n:"Escaneo corporal",desc:"Recorre el cuerpo de pies a cabeza, ~30\u2033 por zona, soltando tensión.",min:[8,10,15],guide:"Lleva la atención a los pies. Nota, suelta. Sube a pantorrillas... hasta la cabeza."},
+ postnado:{n:"Ancla post-nado",desc:"5\u2032 sentado al borde de la piscina. El sistema ya está calmado.",min:[5],guide:"Sentado, ojos cerrados. Siente la respiración entrar y salir. Nada que lograr."}
+};
+const RESP = {
+ r478:{n:"4-7-8 (para dormir)",desc:"Calma el sistema nervioso. Ideal antes de dormir o si despertaste 3am.",fases:[["Inhala por nariz",4],["Retén",7],["Exhala por boca, lento",8]],ciclos:4},
+ caja:{n:"4-4-4-4 (equilibrio)",desc:"Respiración de caja. Enfoca y estabiliza — buena pre-entreno o en estrés.",fases:[["Inhala",4],["Retén",4],["Exhala",4],["Retén vacío",4]],ciclos:5}
+};
+
+/* Mapa: qué elongación toca al cierre según lo trabajado */
+function stretchZone(){
+ const f=S.fase||"", l=S.lugar||"";
+ if(l==="piscina") return "nado";
+ if(l==="ruta"||l==="maquina") return "tren_inf";
+ if(f.includes("pierna")||f==="build"||f==="leanx"||f==="crossshred"||f==="classic") return "tren_inf";
+ if(f.includes("hombro")) return "tren_sup";
+ return "tren_inf";
+}
+
+/* ============ ESTADO Y STORAGE ============ */
+let S={screen:"lugar",lugar:null,fase:null,tiempo:null,plan:[],idx:0,serieDone:{},logs:{},cfg:{mA:null,mB:null}};
+const KEY="coach-nico-v1";
+/* === ESTADO HORNEADO (skill estado-acumulativo) ===
+   Claude re-hornea INIT_BAKED al recibir reportes de avance. Última horneada: 11-ago-2026.
+   Prioridad de carga: storage vivo (artifact o navegador) > INIT_BAKED. */
+const CONFIG={usuario:"Dani",kcalOpciones:[1505],kcalDefault:1505,macros:{p:27,c:41,g:32},aguaMin:2};
+const INIT_BAKED={pop:{day:null,set:null},logs:{},cfg:{mA:null,mB:null},hist:[],body:[{f:"2026-09-07",p:71.1,g:19.7,m:32.3}],mood:[]};
+const store={
+ async get(){
+  try{if(window.storage){const r=await window.storage.get(KEY);if(r&&r.value)return JSON.parse(r.value)}}catch(e){}
+  try{const v=localStorage.getItem(KEY);if(v)return JSON.parse(v)}catch(e){}
+  return null;
+ },
+ async set(d){
+  const v=JSON.stringify(d);
+  try{if(window.storage)await window.storage.set(KEY,v)}catch(e){}
+  try{localStorage.setItem(KEY,v)}catch(e){}
+ }
+};
+async function loadLogs(){
+ const d=(await store.get())||{};
+ S.logs=d.logs||{};S.cfg=d.cfg||INIT_BAKED.cfg;if(!S.cfg.kcal)S.cfg.kcal=CONFIG.kcalDefault;
+ // Fusión horneado+vivo: lo horneado por Claude entra si no existe ya (clave fecha+fase / fecha)
+ const hv=d.hist||[], key=s=>s.d+"|"+s.fase;
+ S.pop=(d.pop&&d.pop.day!=null)?d.pop:(INIT_BAKED.pop||{day:null,set:null});
+ S.hist=hv.concat(INIT_BAKED.hist.filter(b=>!hv.some(s=>key(s)===key(b)))).sort((a,b2)=>a.d<b2.d?-1:1);
+ const bv=d.body||[];
+ S.body=bv.concat(INIT_BAKED.body.filter(b=>!bv.some(x=>x.d===b.d))).sort((a,b2)=>a.d<b2.d?-1:1);
+ const mv=d.mood||[];
+ S.mood=mv.concat((INIT_BAKED.mood||[]).filter(b=>!mv.some(x=>x.d===b.d)));
+ saveLogs();
+}
+async function saveLogs(){await store.set({logs:S.logs,cfg:S.cfg,hist:S.hist,body:S.body,mood:S.mood,pop:S.pop})}
+
+function reco(id){
+ const ex=EX[id];
+ const h=S.logs[id];
+ if(!h||!h.length){
+  // Sin historial: recomienda desde settings según el par del ejercicio
+  if(S.lugar==="casa"&&ex.par&&S.cfg.mA!=null){
+   const kg = ex.par==="B" ? (S.cfg.mB??"—") : (S.cfg.mA??"—");
+   return `Sugerido: Par ${ex.par} (${kg} kg c/u). Ajusta y registra al final.`;
+  }
+  return "Primera vez: parte liviano, registra al final.";
+ }
+ const u=h[h.length-1];
+ let txt;
+ if(u.f>=4) txt=`Última: ${u.p} kg · fácil → prueba ${(+u.p+2.5).toFixed(1)} kg`;
+ else if(u.f===3) txt=`Última: ${u.p} kg · justo → repite ${u.p} kg`;
+ else txt=`Última: ${u.p} kg · pesado → baja a ${Math.max(0,(+u.p-2.5)).toFixed(1)} kg o mejora técnica`;
+ return txt;
+}
+
+/* ============ RENDER ============ */
+const app=document.getElementById("app");
+function chips(ex){return ex.chips.map(c=>c==="carga"?`<span class="chip carga">Carga</span>`:c==="surf"?`<span class="chip">Surf-prep</span>`:`<span class="chip rodilla">Rodilla OK</span>`).join("")}
+
+function render(){
+ if(S.screen==="lugar"){
+  const hoyStr=new Date().toISOString().slice(0,10);
+  const moodHoy=(S.mood||[]).find(m=>m.d===hoyStr);
+  const d7h=new Date(Date.now()-7*864e5);
+  const wkh=(S.hist||[]).filter(s=>new Date(s.d)>=d7h);
+  const minW=wkh.reduce((x,s)=>x+(s.min||0),0), kmW=wkh.reduce((x,s)=>x+(s.m||0),0)/1000;
+  const mdW=(S.mood||[]).filter(m=>new Date(m.d)>=d7h);
+  const avgM=mdW.length?(mdW.reduce((x,m)=>x+m.v,0)/mdW.length).toFixed(1):null;
+  app.innerHTML=`<p class="eyebrow">Coach Dani</p><h1>¿Dónde entrenas hoy?</h1>
+  <div class="excard" style="padding:10px 14px;margin-bottom:10px;cursor:pointer" onclick="go('stats')">
+   <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="display:flex;gap:16px">
+     <div><div style="font-size:19px;font-weight:800;color:var(--ink)">${wkh.length}</div><div style="font-size:9.5px;color:var(--ink-3)">SESIONES<br>SEMANA</div></div>
+     <div><div style="font-size:19px;font-weight:800;color:var(--agua)">${minW}\u2032</div><div style="font-size:9.5px;color:var(--ink-3)">MINUTOS</div></div>
+     ${kmW?`<div><div style="font-size:19px;font-weight:800;color:var(--carga)">${kmW.toFixed(1)}</div><div style="font-size:9.5px;color:var(--ink-3)">KM AGUA<br>/RUTA</div></div>`:""}
+     ${avgM?`<div><div style="font-size:19px;font-weight:800;color:var(--ok)">${avgM}</div><div style="font-size:9.5px;color:var(--ink-3)">ÁNIMO<br>/5</div></div>`:""}
+    </div>
+    <div style="font-size:11px;color:var(--ink-3)">📊 →</div>
+   </div>
+  </div>
+  <div class="excard" style="padding:12px 14px;margin-bottom:14px"><div class="lbl" style="font-size:11px">${moodHoy?`Ánimo de hoy: registrado (${moodHoy.v}/5) — puedes cambiarlo`:"¿Cómo estás hoy? · 1 = muy mal · 5 = muy bien"}</div>
+  <div class="row" style="gap:8px;margin-top:8px;justify-content:space-between">${[[1,"😞"],[2,"😕"],[3,"😐"],[4,"🙂"],[5,"😄"]].map(([v,e])=>`<button onclick="saveMood(${v})" style="flex:1;font-size:22px;padding:8px 0;background:${moodHoy&&moodHoy.v===v?"var(--panel-2)":"transparent"};border:1.5px solid ${moodHoy&&moodHoy.v===v?"var(--agua)":"var(--line)"};border-radius:10px;cursor:pointer">${e}</button>`).join("")}</div></div>
+  <p class="sub">Escucha tu cuerpo: técnica antes que carga, y cualquier dolor articular manda parar.</p>
+  <div class="grid">
+   <div class="opt" onclick="pick('lugar','gym')"><div class="t">🏋️ Gym</div><div class="d">Polo (lun 09–14) o gym martes · máquinas y barras</div></div>
+   <div class="opt" onclick="pick('lugar','casa')"><div class="t">🏠 Casa</div><div class="d">Banca · dominadas · mancuernas fijas · bandas</div></div>
+   <div class="opt" onclick="pick('lugar','piscina')"><div class="t">🏊 Piscina</div><div class="d">Polo 25 m (cerrada lunes) · con tu equipo</div></div>
+   <div class="opt" onclick="pick('lugar','maquina')"><div class="t">🚲 Bici Estática / Elíptica</div><div class="d">Cardio sin impacto en casa</div></div>
+   <div class="opt" onclick="pick('lugar','ruta')"><div class="t">🚴 Bici Híbrida</div><div class="d">Calle · zona 2 · traslados</div></div>
+   <div class="opt" onclick="pick('lugar','cuerpo')"><div class="t">🤸 Solo Cuerpo</div><div class="d">Sin equipo · donde estés</div></div>
+  </div>
+  <button class="btn ghost" onclick="go('recup')">🧘 Recuperación · elongar · dormir · respirar</button>
+  <button class="btn ghost" onclick="go('semana')">📅 Plan semanal · schedule</button>
+  <button class="btn ghost" onclick="go('stats')">📊 Estadísticas · sesiones · InBody</button>
+  <button class="btn ghost" onclick="go('comida')">🍽️ Comida · pauta · macros del día</button>
+  <button class="btn ghost" onclick="go('ajustes')">⚙ Mis mancuernas fijas${S.cfg.mA?` · ${S.cfg.mA} / ${S.cfg.mB??"—"} kg`:""}</button>
+  `;
+ }
+ else if(S.screen==="semana"){
+  const dep = S.wkSport||false;      // deporte de fin de semana (nieve/surf)
+  const par = S.wkPar!==undefined?S.wkPar:true;  // semana par
+  const dias = dep ? [
+   ["Lun","Recuperación post-deporte","Drenaje EMS + movilidad + nado suave. Sin piernas.","var(--agua)"],
+   ["Mar","Fuerza tren superior","Hombro (con o sin barra) + core. Tren no tocado por el deporte.","var(--carga)"],
+   ["Mié","⚡ Potencia piscina","Pique y explosión + barra: el estímulo de transferencia de la semana. Descanso completo entre piques.","var(--carga)"],
+   ["Jue","Pierna LIGHT + core","Cadera-dominante, sin impacto — protege para el finde.","var(--carga)"],
+   ["Vie","Movilidad + activación","Suave. Prepara el cuerpo para el fin de semana.","var(--ok)"],
+   ["Sáb","🏂 Deporte","Nieve / surf. Post: drenaje EMS + jacuzzi.","var(--ink-2)"],
+   ["Dom","🏂 Deporte + drenaje","Segundo día. Cierra con EMS y elongación lumbar.","var(--ink-2)"]
+  ] : [
+   ["Lun","Pierna FUERTE","Sentadilla, zancada, salto progresivo. Semana sin deporte = puedes cargar.","var(--carga)"],
+   ["Mar","Fuerza tren superior","Hombro (con barra) + core.","var(--carga)"],
+   ["Mié","⚡ Potencia piscina","Pique y explosión + barra: sprints con descanso completo. Transferencia surf.","var(--carga)"],
+   ["Jue","Hombro + Surf / empuje","Deltoides + remada. Segundo estímulo de tren superior.","var(--carga)"],
+   ["Vie","Movilidad / actividad ligera","Golf, caminata o nado técnico.","var(--ok)"],
+   ["Sáb","Cardio o nado largo","Fondo aeróbico (Build) o ruta larga.","var(--agua)"],
+   ["Dom","Descanso activo","Elongación + fascial + meditación. Diseño, no falla.","var(--ink-2)"]
+  ];
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Inicio</button><h1>Plan semanal</h1>
+  <p class="sub">Base editable. Ajústalo a tus días reales. Mínimo viable: ${par?"semana par → 2 fuerza + 1 cardio":"semana impar → 3 sesiones"}.</p>
+  <div class="row" style="gap:8px;margin-bottom:6px">
+   <div class="opt ${!dep?'sel':''}" style="text-align:center" onclick="setWk('sport',false)"><div class="t" style="font-size:13px">Semana normal</div></div>
+   <div class="opt ${dep?'sel':''}" style="text-align:center" onclick="setWk('sport',true)"><div class="t" style="font-size:13px">🏂 Deporte finde</div></div>
+  </div>
+  <div class="row" style="gap:8px;margin-bottom:14px">
+   <div class="opt ${par?'sel':''}" style="text-align:center" onclick="setWk('par',true)"><div class="t" style="font-size:13px">Semana par</div></div>
+   <div class="opt ${!par?'sel':''}" style="text-align:center" onclick="setWk('par',false)"><div class="t" style="font-size:13px">Semana impar</div></div>
+  </div>
+  <div class="grid">${dias.map(d=>`<div class="opt" style="border-left:4px solid ${d[3]}"><div style="display:flex;justify-content:space-between"><div class="t" style="font-size:14px">${d[0]} · ${d[1]}</div></div><div class="d" style="margin-top:3px">${d[2]}</div></div>`).join("")}</div>
+  <div class="excard" style="margin-top:14px"><div class="lbl" style="color:var(--agua)">🌙 Regla de sueño de la semana</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">Despertar 06:00 → luces fuera 22:30–23:00 (7–7.5 h), Noche &lt;6h sostenida → baja la intensidad del día. El sueño manda sobre el plan.</p></div>
+  <p class="footer-note">El schedule es una base. La vida real (familia, trabajo, clima) manda — muévelo sin culpa.</p>`;
+ }
+ else if(S.screen==="comida"){
+  const k=CONFIG.kcalDefault;
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Inicio</button><h1>🍽️ Comida</h1>
+  <p class="sub">Tu planificación Vital Balance (nutricionista Fran Casanova) · control 09-oct.</p>
+  <div class="excard"><div class="lbl" style="color:var(--agua)">Tu día (${k} kcal)</div>
+  <div style="display:flex;gap:16px;margin-top:8px">
+   <div><div style="font-size:19px;font-weight:800;color:var(--ink)">100 g</div><div style="font-size:9.5px;color:var(--ink-3)">PROTEÍNA</div></div>
+   <div><div style="font-size:19px;font-weight:800;color:var(--agua)">156 g</div><div style="font-size:9.5px;color:var(--ink-3)">CARBOS</div></div>
+   <div><div style="font-size:19px;font-weight:800;color:var(--carga)">56 g</div><div style="font-size:9.5px;color:var(--ink-3)">LÍPIDOS</div></div>
+   <div><div style="font-size:19px;font-weight:800;color:var(--ok)">2 L</div><div style="font-size:9.5px;color:var(--ink-3)">AGUA MÍN</div></div>
+  </div></div>
+  <div class="excard"><div class="lbl">⚡ Tu metabolismo (báscula 07-sep)</div>
+  <p style="font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5">TMB <b style="color:var(--ink)">1603 kcal</b> · pauta <b style="color:var(--ink)">1505 kcal</b> → déficit suave diseñado por tu nutricionista, sostenible con tu nivel de actividad. Composición: <b style="color:var(--ink)">19.7% grasa · músculo excelente · edad corporal 38</b>. Dato para tu control del 09-oct: llega con el registro de sesiones de la app.</p></div>
+  <div class="excard"><div class="lbl" style="color:var(--carga)">🏃 Combustible de corredora</div>
+  ${[["10K · 90-30\u2032 antes","40 g carbo: 1 taza cereal + yogurt · o pan blanco + mermelada/manjar + ½ plátano."],
+     ["10K · últimos 2K","Gel energético · o gomitas (20 g) · o isotónica diluida."],
+     ["Fuerza · 90-30\u2032 antes","10-30 g carbo: leche con café · yogurt + fruta · pan + manjar."],
+     ["Post-entreno","Frutas/verduras antioxidantes: arándanos, frutos rojos, kiwi, mango, pimentón, zanahoria."]].map(x=>`<div style="margin-top:8px"><div style="font-size:12.5px;font-weight:700;color:var(--ink)">${x[0]}</div><p style="font-size:12px;color:var(--ink-2);line-height:1.45;margin-top:2px">${x[1]}</p></div>`).join("")}</div>
+  <div class="excard"><div class="lbl">📅 Tus 5-6 comidas</div>
+  ${[["☀️ Desayuno","2P proteína + 1P cereal + 1P lípido. Ej: 3 huevos + ½ palta + pan integral/pita · o pollo + palta + pan masa madre."],
+     ["🍊 Media mañana","1 fruta (2 mandarinas o 1 naranja)."],
+     ["🍗 Almuerzo","Entrada de verduras libres + aceite oliva · Fondo: 4P proteína + 1-2P cereal. Ej: salmón + camote · pollo + papa/arroz · hamburguesa de pavo + quinoa · ceviche de lentejas + huevos."],
+     ["🥛 Media tarde","1 lácteo semi/descremado + 1P cereal + 1 fruta (ej: smoothie proteico de frutos rojos)."],
+     ["🌙 Once/Cena","2P proteína + 1P cereal + 1P lípido + vegetales + infusión."]].map(x=>`<div style="margin-top:9px"><div style="font-size:12.5px;font-weight:700;color:var(--ink)">${x[0]}</div><p style="font-size:12px;color:var(--ink-2);line-height:1.45;margin-top:2px">${x[1]}</p></div>`).join("")}</div>
+  <div class="excard" style="border-color:var(--ok)"><div class="lbl" style="color:var(--ok)">🌸 Nutrientes clave de tu ciclo</div>
+  <p style="font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.5"><b style="color:var(--ink)">Vitamina C:</b> pimentón rojo, arándanos, frambuesas · <b style="color:var(--ink)">Carotenoides:</b> zanahoria, camote, mango · <b style="color:var(--ink)">Polifenoles:</b> té verde, cúrcuma, cacao amargo 70%+ · <b style="color:var(--ink)">Fitoestrógenos:</b> chía, linaza, sésamo, soya, frutos secos · <b style="color:var(--ink)">Omega-3:</b> salmón, trucha, chía, palta, oliva · <b style="color:var(--ink)">Calcio+D:</b> lácteos descremados, almendras, sardinas + sol.</p>
+  <p style="font-size:11px;color:var(--ink-3);margin-top:6px">Regulan estrógeno → más energía, mejor descanso, menos síntomas.</p></div>`;
+ }
+ else if(S.screen==="postop"){go("lugar");}
+ else if(S.screen==="stats"){
+  const hoy=new Date(), d7=new Date(hoy-7*864e5), d30=new Date(hoy-30*864e5);
+  const wk=S.hist.filter(s=>new Date(s.d)>=d7), mo=S.hist.filter(s=>new Date(s.d)>=d30);
+  const sum=a=>a.reduce((x,s)=>x+(s.min||0),0), dist=a=>a.reduce((x,s)=>x+(s.m||0),0);
+  const porTipo=a=>{const t={};a.forEach(s=>{const k=({gym:"Gym",casa:"Casa",piscina:"Piscina",maquina:"Máquina",ruta:"Bici",cuerpo:"Cuerpo"})[s.lugar]||s.lugar;t[k]=(t[k]||0)+1});return Object.entries(t).map(([k,v])=>`${k} ×${v}`).join(" · ")||"—"};
+  const wks=[];for(let i=7;i>=0;i--){const a=new Date(hoy-(i+1)*7*864e5),b2=new Date(hoy-i*7*864e5);wks.push(S.hist.filter(s=>{const x=new Date(s.d);return x>=a&&x<b2}).reduce((x,s)=>x+(s.min||0),0))}
+  const mx=Math.max(...wks,60);
+  const bars=wks.map((v,i)=>`<rect x="${18+i*44}" y="${110-v/mx*95}" width="30" height="${Math.max(v/mx*95,1)}" rx="4" fill="${i===7?'#F2A93B':'#3EC9D9'}" opacity="${i===7?1:.75}"/><text x="${33+i*44}" y="122" text-anchor="middle" font-size="9" fill="#5C737C">${i===7?'hoy':(7-i)+'sem'}</text>${v?`<text x="${33+i*44}" y="${Math.max(106-v/mx*95,10)}" text-anchor="middle" font-size="9" fill="#B9C6CC">${v}\u2032</text>`:''}`).join("");
+  const b=S.body.slice().sort((x,y)=>x.d<y.d?-1:1), b0=b[0], bN=b[b.length-1];
+  const bodyRows=b.slice(-5).reverse().map(x=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);padding:4px 0;border-bottom:1px solid var(--line)"><span>${x.d}</span><span>${x.kg} kg${x.fat!=null?` · ${x.fat}%`:""}${x.mme!=null?` · MME ${x.mme}`:""}</span></div>`).join("");
+  const delta=b.length>1?`Δ desde ${b0.d}: <b style="color:var(--ink)">${(bN.kg-b0.kg).toFixed(1)} kg</b>${bN.mme&&b0.mme?` · MME ${((bN.mme-b0.mme)>=0?"+":"")+(bN.mme-b0.mme).toFixed(1)}`:""}${bN.fat!=null&&b0.fat!=null?` · grasa ${((bN.fat-b0.fat)>=0?"+":"")+(bN.fat-b0.fat).toFixed(1)}%`:""}`:"Registra tu próximo InBody para ver la evolución.";
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Inicio</button><h1>📊 Estadísticas</h1>
+  <div class="excard"><div class="lbl" style="color:var(--carga)">Esta semana (7 días)</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px"><b style="color:var(--ink);font-size:18px">${wk.length}</b> sesiones · <b style="color:var(--ink)">${sum(wk)}\u2032</b> totales${dist(wk)?` · <b style="color:var(--ink)">${(dist(wk)/1000).toFixed(1)} km</b> agua/ruta`:""}<br>${porTipo(wk)}</p></div>
+  <div class="excard"><div class="lbl" style="color:var(--agua)">Este mes (30 días)</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px"><b style="color:var(--ink);font-size:18px">${mo.length}</b> sesiones · <b style="color:var(--ink)">${sum(mo)}\u2032</b> (${(sum(mo)/60).toFixed(1)} h)${dist(mo)?` · <b style="color:var(--ink)">${(dist(mo)/1000).toFixed(1)} km</b>`:""}<br>${porTipo(mo)}</p></div>
+  <div class="excard"><div class="lbl">Minutos por semana · últimas 8</div>
+  <svg viewBox="0 0 380 128" style="width:100%;margin-top:6px">${bars}</svg></div>
+  <div class="excard"><div class="lbl" style="color:var(--carga)">🧠 Ánimo · últimos 30 días</div>
+  ${(()=>{const md=(S.mood||[]).filter(m=>new Date(m.d)>=d30).sort((a,b2)=>a.d<b2.d?-1:1);
+   if(!md.length)return "<p style='font-size:12px;color:var(--ink-3);margin-top:6px'>Marca tu ánimo cada día en la portada — aquí verás la evolución.</p>";
+   const avg=(md.reduce((x,m)=>x+m.v,0)/md.length).toFixed(1);
+   const wk2=md.filter(m=>new Date(m.d)>=d7), avgW=wk2.length?(wk2.reduce((x,m)=>x+m.v,0)/wk2.length).toFixed(1):"—";
+   const colors={1:"#E2574C",2:"#E08A3C",3:"#C9C43E",4:"#7BC96F",5:"#3EC9D9"};
+   const n=md.length, bw=Math.min(24,Math.max(8,Math.floor(340/n)-3));
+   const mbars=md.map((m,i)=>`<rect x="${16+i*(bw+3)}" y="${100-m.v*17}" width="${bw}" height="${m.v*17}" rx="3" fill="${colors[m.v]}"/>`).join("");
+   return `<p style="font-size:12.5px;color:var(--ink-2);margin:6px 0">Promedio 30 días: <b style="color:var(--ink)">${avg}/5</b> · esta semana: <b style="color:var(--ink)">${avgW}/5</b></p>
+   <svg viewBox="0 0 380 108" style="width:100%">${mbars}<line x1="12" y1="100" x2="372" y2="100" stroke="#2A424E" stroke-width="2"/></svg>
+   <p style="font-size:10.5px;color:var(--ink-3)">Cada barra = un día. Los días bajos pasan — mira la tendencia, no el punto.</p>`})()}
+  </div>
+  <div class="excard"><div class="lbl" style="color:var(--ok)">InBody</div>
+  <p style="font-size:12.5px;color:var(--ink-2);margin:6px 0 8px">${delta}</p>${bodyRows}
+  <div class="lbl" style="margin-top:12px;font-size:11px">Nuevo registro</div>
+  <div class="row" style="gap:6px;margin-top:6px">
+   <input id="bkg" type="number" step="0.1" placeholder="kg" style="flex:1;background:var(--panel-2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);font-size:13px;padding:8px">
+   <input id="bfat" type="number" step="0.1" placeholder="% grasa" style="flex:1;background:var(--panel-2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);font-size:13px;padding:8px">
+   <input id="bmme" type="number" step="0.1" placeholder="MME kg" style="flex:1;background:var(--panel-2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);font-size:13px;padding:8px">
+  </div><button class="btn" style="margin-top:8px" onclick="saveBody()">Guardar InBody</button></div>
+  <div class="excard"><div class="lbl">Últimas sesiones</div>
+  ${S.hist.slice(-6).reverse().map(s=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);padding:4px 0;border-bottom:1px solid var(--line)"><span>${s.d} · ${s.fase}</span><span>${s.min}\u2032${s.m?` · ${s.m>=1000?(s.m/1000).toFixed(1)+" km":s.m+" m"}`:""}</span></div>`).join("")||"<p style='font-size:12px;color:var(--ink-3)'>Aún sin sesiones registradas.</p>"}</div>
+  <button class="btn ghost" onclick="exportProg()">📤 Exportar todo</button>`;
+ }
+ else if(S.screen==="negocio"){
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Volver a la app</button>
+  <p class="eyebrow" style="color:var(--carga)">Caso de negocio · confidencial</p>
+  <h1>De demo a producto</h1>
+  <p class="sub">Lo que estás usando es una muestra funcional construida por una persona. Esto es lo que se necesita para convertirlo en un producto real y cómo escala.</p>
+
+  <div class="excard"><div class="lbl" style="color:var(--agua)">Qué es hoy</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">Motor de entrenamiento personalizado que cruza <b style="color:var(--ink)">composición corporal + sueño + restricciones médicas</b> — el ángulo que las apps genéricas no resuelven. Adapta la sesión por lugar, fase, tiempo disponible y estado del día, con progresión inteligente y recuperación guiada. Ya funciona.</p></div>
+
+  <div class="excard"><div class="lbl" style="color:var(--agua)">El diferenciador</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">No es "otra app de rutinas". Es un <b style="color:var(--ink)">coach clínico-deportivo</b>: entiende una lesión, un déficit muscular medido, una restricción articular, y construye alrededor de eso. Justo lo que un centro de rehabilitación o de rendimiento valora — y lo genérico no tiene.</p></div>
+
+  <div class="excard"><div class="lbl" style="color:var(--carga)">Qué se necesita para desarrollarlo</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">
+  · <b style="color:var(--ink)">Backend + cuentas:</b> datos por usuario, seguros y respaldados.<br>
+  · <b style="color:var(--ink)">Cumplimiento de datos de salud:</b> arquitectura conforme a la normativa vigente (dato sensible).<br>
+  · <b style="color:var(--ink)">Gráficas de nivel producto:</b> ilustración profesional del movimiento.<br>
+  · <b style="color:var(--ink)">Panel para profesionales:</b> que el kine/entrenador defina y siga protocolos.<br>
+  · <b style="color:var(--ink)">Integraciones:</b> InBody, wearables, métricas de sueño.</p></div>
+
+  <div class="excard"><div class="lbl" style="color:var(--carga)">Timing referencial</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">
+  · <b style="color:var(--ink)">Fase 1 — Piloto (4–6 sem):</b> adaptar a un caso real, validar uso y valor.<br>
+  · <b style="color:var(--ink)">Fase 2 — MVP con backend (2–4 meses):</b> cuentas, datos seguros, panel profesional.<br>
+  · <b style="color:var(--ink)">Fase 3 — Producto y escala (6+ meses):</b> apps nativas, integraciones, multi-cliente.</p></div>
+
+  <div class="excard"><div class="lbl" style="color:var(--carga)">Inversión referencial (orden de magnitud)</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">
+  · Piloto adaptado: bajo, casi solo tiempo de desarrollo.<br>
+  · MVP con backend + compliance: inversión media (semanas-mes de desarrollo o equivalente contratado).<br>
+  · Producto escalable con apps nativas: inversión mayor, se justifica solo con tracción del MVP.<br>
+  <span style="color:var(--ink-3);font-size:11.5px">Cifras exactas se ajustan al alcance acordado. Modelo pensado para esfuerzo alto al inicio e ingresos estables en el tiempo (suscripción por profesional/paciente).</span></p></div>
+
+  <div class="excard"><div class="lbl" style="color:var(--ok)">Cómo escala (potencial)</div>
+  <p style="font-size:13px;color:var(--ink-2);margin-top:6px">
+  · <b style="color:var(--ink)">Centro de salud / rehabilitación:</b> herramienta que acompaña al paciente entre sesiones de kine y estandariza protocolos de retorno deportivo. Cliente ancla.<br>
+  · <b style="color:var(--ink)">Cadena de gimnasios / fitness:</b> coach personalizado para socios, diferenciador de retención.<br>
+  · <b style="color:var(--ink)">Otros:</b> mutuales, equipos deportivos, telerehabilitación.<br>
+  Cada vertical valida por separado; el centro de salud es la puerta de entrada de mayor valor.</p></div>
+
+  <div class="excard" style="border-color:var(--agua)"><div class="lbl" style="color:var(--agua)">La propuesta</div>
+  <p style="font-size:13px;color:var(--ink);margin-top:6px">Este demo prueba que el concepto funciona. El siguiente paso es un <b>piloto pagado acotado</b> sobre un caso real, que valida el valor con inversión mínima antes de escalar. De ahí sale el producto.</p></div>
+
+  <button class="btn ghost" onclick="go('lugar')">← Volver a la app</button>
+  <p class="footer-note">Documento de evaluación. Nombres de potenciales clientes omitidos a propósito. Concepto, código y contenido propiedad del autor — no reproducir.</p>`;
+ }
+ else if(S.screen==="recup"){
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Inicio</button><h1>Recuperación activa</h1>
+  <p class="sub">Tan importante como entrenar. Elige qué necesitas hoy.</p>
+  <div class="grid">
+   <div class="opt" onclick="go('sueno')"><div class="t">😴 ¿Cuánto debo dormir hoy?</div><div class="d">Recomendación + siesta según tu día</div></div>
+   <div class="opt" onclick="go('elong')"><div class="t">🤸 Elongación guiada</div><div class="d">Con timer por estiramiento</div></div>
+   <div class="opt" onclick="go('medit')"><div class="t">🧘 Meditación guiada</div><div class="d">Conteo · escaneo · post-nado</div></div>
+   <div class="opt" onclick="go('resp')"><div class="t">🌬️ Respiración guiada</div><div class="d">4-7-8 para dormir · 4-4-4-4 equilibrio</div></div>
+   <div class="opt" onclick="go('kegel')"><div class="t">🎯 Suelo pélvico (Kegel)</div><div class="d">Control y firmeza · con timer</div></div>
+   <div class="opt" onclick="S.lugar='cuerpo';S.fase='drenaje';pick('tiempo',30)"><div class="t">💧 Drenaje linfático</div><div class="d">12 min guiados · ayunas o pre-dormir · agua antes</div></div>
+   <div class="opt" onclick="S.lugar='cuerpo';S.fase='fascial';pick('tiempo',30)"><div class="t">🌀 Liberación fascial</div><div class="d">Rodillo + pelota · guiada con figuras y timer</div></div>
+     </div>`;
+ }
+ else if(S.screen==="soy"){go("lugar");}
+ else if(S.screen==="proceso"){go("lugar");}
+ else if(S.screen==="kegel"){
+  app.innerHTML=`<button class="back" onclick="go('recup')">← Recuperación</button><h1>Suelo pélvico</h1>
+  <p class="sub">Entrena el pubocoxígeo — mejora el control eyaculatorio y la firmeza de la erección. Constancia: 1–2 veces al día, resultados en 4–6 semanas. Elige el modo:</p>
+  <div class="grid">${Object.entries(KEGEL).map(([k,v])=>`<div class="opt" onclick="startKegel('${k}')"><div class="t">${v.n}</div><div class="d">${v.desc}</div></div>`).join("")}</div>
+  <p class="footer-note">Vejiga vacía. No lo hagas orinando (solo para identificar el músculo la primera vez). Si notas dolor, para.</p>`;
+ }
+ else if(S.screen==="sueno"){
+  app.innerHTML=`<button class="back" onclick="go('recup')">← Recuperación</button><h1>¿Cuánto dormir hoy?</h1>
+  <p class="sub">Tu meta base: ventana 22:30–23:00 → 06:00 (~7–7.5 h), Ajusta según tu día:</p>
+  <div class="grid">
+   <div class="opt" onclick="sleepRec('mal')"><div class="t">Dormí mal anoche (&lt;6h)</div></div>
+   <div class="opt" onclick="sleepRec('fiesta')"><div class="t">Salí / me acosté muy tarde</div></div>
+   <div class="opt" onclick="sleepRec('intenso')"><div class="t">Entrené intenso hoy</div></div>
+   <div class="opt" onclick="sleepRec('bien')"><div class="t">Vengo durmiendo bien</div></div>
+  </div>
+  <div id="sleepOut"></div>`;
+ }
+ else if(S.screen==="elong"){
+  app.innerHTML=`<button class="back" onclick="go('recup')">← Recuperación</button><h1>Elongación guiada</h1>
+  <p class="sub">Elige la zona. La app te lleva estiramiento por estiramiento con timer.</p>
+  <div class="grid">${Object.entries(ELONG).map(([k,v])=>`<div class="opt" onclick="startElong('${k}')"><div class="t">${v.n}</div><div class="d">${v.items.length} estiramientos · ~${Math.round(v.items.reduce((a,b)=>a+b[1],0)/60)}\u2032</div></div>`).join("")}</div>`;
+ }
+ else if(S.screen==="medit"){
+  app.innerHTML=`<button class="back" onclick="go('recup')">← Recuperación</button><h1>Meditación guiada</h1>
+  <p class="sub">Desde cero: parte con 5\u2032 de conteo. Mínimo viable 3\u2032. La respiración c/3 que ya haces nadando es tu ancla.</p>
+  <div class="grid">${Object.entries(MEDIT).map(([k,v])=>`<div class="opt" onclick="pickMedit('${k}')"><div class="t">${v.n}</div><div class="d">${v.desc}</div></div>`).join("")}</div>`;
+ }
+ else if(S.screen==="resp"){
+  app.innerHTML=`<button class="back" onclick="go('recup')">← Recuperación</button><h1>Respiración guiada</h1>
+  <p class="sub">Sigue el círculo: se expande al inhalar, se contrae al exhalar.</p>
+  <div class="grid">${Object.entries(RESP).map(([k,v])=>`<div class="opt" onclick="startResp('${k}')"><div class="t">${v.n}</div><div class="d">${v.desc}</div></div>`).join("")}</div>`;
+ }
+ else if(S.screen==="ajustes"){
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Inicio</button><h1>Mancuernas fijas</h1>
+  <p class="sub">Armado final: Par A = 8 kg c/u · Par B = 15 kg c/u · naranja = 7 kg · barra banca ~21 kg · disco 5 suelto → puente · 2×1 kg de reserva = microprogresión del Par A (→10 kg cuando se sienta fácil).</p>
+  <div class="lbl">Par A — medio (kg por mancuerna)</div>
+  <input id="mA" type="number" inputmode="decimal" value="${S.cfg.mA??""}" placeholder="8" style="width:100%;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:20px;font-weight:800;padding:12px;text-align:center;margin:8px 0 14px">
+  <div class="lbl">Par B — pesado (kg por mancuerna)</div>
+  <input id="mB" type="number" inputmode="decimal" value="${S.cfg.mB??""}" placeholder="15" style="width:100%;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:20px;font-weight:800;padding:12px;text-align:center;margin:8px 0 14px">
+  <button class="btn" onclick="saveCfg()">Guardar</button>`;
+ }
+ else if(S.screen==="fase"){
+  app.innerHTML=`<button class="back" onclick="go('lugar')">← Lugar</button><h1>Fase</h1><p class="sub">Fase activa según tu skill: Build (gym) · Classic (casa).</p>
+  <div class="grid">${FASES[S.lugar].map(f=>`<div class="opt" onclick="pick('fase','${f[0]}')"><div class="t">${f[1]}</div><div class="d">${f[2]}</div></div>`).join("")}</div>`;
+ }
+ else if(S.screen==="tiempo"){
+  app.innerHTML=`<button class="back" onclick="go('fase')">← Fase</button><h1>¿Cuánto tiempo tienes?</h1><p class="sub">El plan se recorta solo. Siempre cierra con elongación.</p>
+  <div class="row">${[30,60,90].map(t=>`<div class="opt" onclick="pick('tiempo',${t})"><div class="t">${t}\u2032</div></div>`).join("")}</div>`;
+ }
+ else if(S.screen==="resumen"){
+  const p=PLANES[S.lugar][S.fase];
+  const bloques = p.series[S.tiempo]===1;
+  const elMin = S.tiempo>=90?10:S.tiempo>=60?8:6;
+  const trabMin = S.tiempo - elMin;
+  app.innerHTML=`<button class="back" onclick="go('tiempo')">← Tiempo</button>
+  <p class="eyebrow">${S.fase.toUpperCase()} · ${({gym:"Gym",casa:"Casa",piscina:"Piscina",cuerpo:"Solo cuerpo",maquina:"Máquina",ruta:"Bici híbrida"})[S.lugar]} · ${S.tiempo}\u2032</p>
+  <h1>Tu sesión</h1><p class="sub">${bloques?`${S.plan.length} bloques — descansos incluidos.`:`${S.plan.length} ejercicios · ${p.series[S.tiempo]} series c/u · descanso ${p.rest}\u2033.`}<br><b style="color:var(--ink)">${trabMin}\u2032 trabajo + ${elMin}\u2032 elongación = ${S.tiempo}\u2032 total.</b></p>
+  <div class="grid">${S.plan.map((id,i)=>`<div class="opt" style="display:flex;align-items:center;gap:12px"><div style="font-weight:800;color:var(--ink-3)">${i+1}</div><div><div class="t" style="font-size:14.5px">${EX[id].n}</div><div class="d">${EX[id].rep||p.reps} · ${chips(EX[id])||""}</div></div></div>`).join("")}
+  <div class="opt" style="display:flex;align-items:center;gap:12px;border-style:dashed"><div style="font-weight:800;color:var(--ok)">＋</div><div><div class="t" style="font-size:14.5px">Elongación guiada ${elMin}\u2032</div><div class="d">Se abre al terminar · ya está en tu tiempo</div></div></div></div>
+  <button class="btn" onclick="startSession()">Empezar sesión</button>`;
+ }
+ else if(S.screen==="sesion"){
+  const id=S.plan[S.idx], ex=EX[id], p=PLANES[S.lugar][S.fase], ns=p.series[S.tiempo];
+  const done=S.serieDone[S.idx]||0;
+  const r=ex.peso?reco(id):null;
+  app.innerHTML=`
+  <div class="dots">${Array.from({length:S.plan.length+1},(_,i)=>`<span class="dot ${i<S.idx?"done":i===S.idx?"now":""}" title="${i<S.plan.length?(EX[S.plan[i]]?EX[S.plan[i]].n:''):'Elongación'}"></span>`).join("")}</div>
+  <p class="eyebrow">Ejercicio ${S.idx+1} de ${S.plan.length} · queda${S.plan.length-S.idx-1===0?"":"n"} ${S.plan.length-S.idx-1} + elongación</p>
+  <div class="excard">
+   <div class="exhead"><div><div class="exname">${ex.n}</div><div class="exmeta">${ns===1?`<b style="color:var(--carga)">${ex.rep||""}</b>`:`${ns} series × <b style="color:var(--carga)">${ex.rep||p.reps}</b> · descanso ${p.rest}\u2033`}</div></div><div>${chips(ex)}</div></div>
+   <div class="fig">${SVGS[ex.svg]}</div>
+   <p style="font-size:13px;color:var(--ink-2)">${ex.tip}</p>
+   ${ex.peso?`<div style="background:var(--panel-2);border:1px solid var(--carga);border-radius:10px;padding:8px 12px;margin-top:10px"><span style="font-size:10px;font-weight:800;letter-spacing:1px;color:var(--carga)">💡 PESO</span><div style="font-size:13px;color:var(--ink);font-weight:600;margin-top:2px">${r||"Registra al final"}</div></div>`:""}
+   ${ex.peso&&S.lugar==="casa"&&S.cfg.mA&&!ex.par?`<p class="reco" style="color:var(--agua)">Mancuernas fijas: A ${S.cfg.mA} / B ${S.cfg.mB??"—"} kg</p>`:""}
+   <div class="lbl" style="margin-top:12px">${ns===1?"Toca al completar el bloque":"Series — toca al terminar cada una"}</div>
+   <div class="series">${Array.from({length:ns},(_,i)=>`<div class="serie ${i<done?"done":""}" onclick="doSerie(${i})">${i<done?"✓":(ns===1?"Completar":"S"+(i+1))}</div>`).join("")}</div>
+   <button class="linkalt" onclick="swapAlt()">⇄ Máquina ocupada / no está → alternativa</button>
+  </div>
+  <div class="row" style="gap:10px">
+   ${S.idx>0?`<button class="btn ghost" style="margin-top:0" onclick="prevEx()">← Anterior</button>`:``}
+   <button class="btn ghost" style="margin-top:0" onclick="skipEx()">${S.idx+1>=S.plan.length?"Terminar":"Saltar →"}</button>
+  </div>
+  <button class="btn ghost" style="border-color:var(--alerta);color:var(--alerta)" onclick="quitSession()">✕ Salir de la sesión</button>`;
+ }
+ else if(S.screen==="fin"){
+  const mAuto=S.plan.reduce((x,id)=>x+((EX[id]&&EX[id].mt)||0),0);
+  if(!S.sesSaved){S.sesSaved=true;S.hist.push({d:new Date().toISOString().slice(0,10),lugar:S.lugar,fase:S.fase,min:S.tiempo||0,m:mAuto});saveLogs()}
+  const legDay = (S.fase||"").includes("pierna")||S.fase==="build";
+  const esDist = S.lugar==="piscina"||S.lugar==="ruta";
+  const d7f=new Date(Date.now()-7*864e5), d30f=new Date(Date.now()-30*864e5);
+  const wkf=S.hist.filter(s=>new Date(s.d)>=d7f), mof=S.hist.filter(s=>new Date(s.d)>=d30f);
+  const sm=a=>a.reduce((x,s)=>x+(s.min||0),0), dm=a=>a.reduce((x,s)=>x+(s.m||0),0);
+  app.innerHTML=`<div class="done-card"><div class="big">✅</div><h1>Sesión cerrada</h1></div>
+  <div class="excard"><div class="lbl" style="color:var(--carga)">📋 Resumen de hoy</div>
+   <div style="display:flex;gap:18px;margin:10px 0 12px">
+    <div><div style="font-size:20px;font-weight:800;color:var(--ink)">${S.tiempo}\u2032</div><div style="font-size:9.5px;color:var(--ink-3)">DURACIÓN</div></div>
+    <div><div style="font-size:20px;font-weight:800;color:var(--agua)">${S.plan.length}</div><div style="font-size:9.5px;color:var(--ink-3)">BLOQUES</div></div>
+    ${mAuto?`<div><div style="font-size:20px;font-weight:800;color:var(--carga)">${mAuto>=1000?(mAuto/1000).toFixed(1)+" km":mAuto+" m"}</div><div style="font-size:9.5px;color:var(--ink-3)">DISTANCIA</div></div>`:""}
+   </div>
+   ${S.plan.map(id=>`<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);padding:3px 0;border-bottom:1px solid var(--line)"><span>${EX[id].n}</span><span style="color:var(--ink-3)">${EX[id].mt?EX[id].mt+" m":(EX[id].rep||"")}</span></div>`).join("")}
+  </div>
+  ${esDist?`<div class="excard"><div class="lbl" style="color:var(--agua)">Ajustar ${S.lugar==="piscina"?"metros":"km"} reales (opcional)</div>
+  <div class="row" style="gap:8px;margin-top:8px"><input id="mts" type="number" placeholder="${mAuto||"ej: 1200"}" style="flex:1;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:15px;padding:10px"><button class="btn" style="margin:0;width:auto;padding:10px 16px" onclick="saveMts()">Guardar</button></div></div>`:""}
+  <div class="excard"><div class="lbl" style="color:var(--ok)">📊 Acumulado</div>
+   <p style="font-size:13px;color:var(--ink-2);margin-top:6px"><b style="color:var(--ink)">Semana:</b> ${wkf.length} sesiones · ${sm(wkf)}\u2032${dm(wkf)?` · ${(dm(wkf)/1000).toFixed(1)} km`:""}<br>
+   <b style="color:var(--ink)">Mes:</b> ${mof.length} sesiones · ${(sm(mof)/60).toFixed(1)} h${dm(mof)?` · ${(dm(mof)/1000).toFixed(1)} km`:""}</p>
+   <button class="btn ghost" style="margin-top:8px" onclick="go('stats')">Ver estadísticas completas →</button></div>
+  <button class="btn" onclick="startElong('${stretchZone()}')">🤸 Elongar ahora (guiada)</button>
+  <div class="excard" style="margin-top:14px">
+   <div class="lbl" style="color:var(--carga)">🍽️ Ventana post-entreno (30–60 min)</div>
+   <p style="font-size:13px;color:var(--ink-2);margin-top:6px">1 scoop de proteína (~25–30 g) + carbohidrato: fruta, avena o arroz (~0.5–1 g/kg si fue sesión fuerte). Completa tu gap del día hacia 180–200 g de proteína.</p>
+   <div class="lbl" style="color:var(--agua);margin-top:12px">🌙 Recuperación nocturna</div>
+   <p style="font-size:13px;color:var(--ink-2);margin-top:6px">${legDay?"Piernas pesadas → EMS drenaje (modo 2/10) o liberación fascial.<br>":""}Magnesio 200–400 mg (glicinato o citrato se toleran mejor) ~1 h antes de dormir puede ayudar al sueño y recuperación muscular.<br>Ventana de sueño 22:30–23:00 → 06:00,</p>
+   <div class="lbl" style="color:var(--ok);margin-top:12px">🧖 Recuperación extra (si tienes acceso)</div>
+   <p style="font-size:13px;color:var(--ink-2);margin-top:6px">Sauna: 10–15 min post-entreno o en día de descanso — relaja, mejora circulación, ayuda al sueño si es 1–2 h antes de dormir. Hidrátate bien. Jacuzzi con chorros: apunta los jets a piernas/espalda tras piernas pesadas o snowboard (masaje + drenaje). No sauna caliente largo el mismo día de sesión muy intensa deshidratado.</p>
+   <p style="font-size:11px;color:var(--ink-3);margin-top:10px">Dosis general, no médica. Verifica suplementos con tu médico, especialmente si tomas medicamentos.</p>
+  </div>
+  <button class="btn ghost" onclick="exportProg()">📤 Exportar progreso</button>
+  <button class="btn ghost" onclick="resetAll()">Nueva sesión</button>
+  <p class="footer-note">Registra tu log del día: ánimo · energía · sueño · entrenó ✓.</p>`;
+ }
+ window.scrollTo(0,0);
+}
+
+/* ============ FLUJO ============ */
+window.pick=(k,v)=>{S[k]=v;
+ if(k==="lugar"){S.fase=null;S.screen="fase"}
+ else if(k==="fase"){S.screen="tiempo"}
+ else if(k==="tiempo"){const p=PLANES[S.lugar][S.fase];S.plan=p.lista.slice(0,p.corte[v]);S.screen="resumen"}
+ render()};
+window.go=s=>{S.screen=s;render()};
+window.startSession=()=>{S.idx=0;S.serieDone={};S.screen="sesion";render()};
+window.swapAlt=()=>{const id=S.plan[S.idx];const alts=EX[id].alt.filter(a=>!S.plan.includes(a)||a===id);const next=(EX[id].alt.find(a=>!S.plan.slice(0,S.idx).includes(a)))||EX[id].alt[0];S.plan[S.idx]=next;S.serieDone[S.idx]=0;render()};
+window.skipEx=()=>{nextEx()};
+window.prevEx=()=>{if(S.idx>0){S.idx--;S.screen="sesion";render()}};
+window.setWk=(k,v)=>{if(k==='sport')S.wkSport=v;else S.wkPar=v;render()};
+window.quitSession=()=>{
+ const m=document.createElement("div");m.className="modal";
+ m.innerHTML=`<div class="sheet"><h2>¿Salir de la sesión?</h2>
+  <p style="font-size:13px;color:var(--ink-2);margin:8px 0 16px">Tus pesos registrados hasta ahora quedan guardados. Puedes terminar aquí o volver.</p>
+  <button class="btn" id="qcierre">Terminar y ver cierre</button>
+  <button class="btn ghost" id="qsalir">Salir al inicio</button>
+  <button class="btn ghost" id="qvolver">Seguir entrenando</button></div>`;
+ document.body.appendChild(m);
+ m.querySelector("#qcierre").onclick=()=>{m.remove();S.screen="fin";render()};
+ m.querySelector("#qsalir").onclick=()=>{m.remove();resetAll()};
+ m.querySelector("#qvolver").onclick=()=>m.remove();
+};
+window.doSerie=(i)=>{
+ const done=S.serieDone[S.idx]||0;
+ if(i!==done) return;
+ S.serieDone[S.idx]=done+1;
+ const p=PLANES[S.lugar][S.fase], ns=p.series[S.tiempo];
+ if(S.serieDone[S.idx]>=ns){ askLog(); }
+ else { restTimer(p.rest); }
+ render();
+};
+function nextEx(){
+ if(S.idx+1>=S.plan.length){S.screen="fin";render()}
+ else {S.idx++;S.screen="sesion";render();
+  // Timer de transición entre ejercicios (más corto que descanso entre series)
+  const p=PLANES[S.lugar][S.fase];
+  if(p.rest>0){transTimer(Math.max(30,p.rest))}
+ }
+}
+function transTimer(sec){
+ const w=document.createElement("div");w.className="timerwrap";
+ w.innerHTML=`<div class="timerlbl">Cambio de ejercicio · prepárate</div><div class="timer" id="tval" style="color:var(--ok)">${sec}</div><button class="timerskip" onclick="endTimer()">Empezar ya</button>`;
+ document.body.appendChild(w);
+ clearInterval(tInt);let t=sec;
+ tInt=setInterval(()=>{t--;const el=document.getElementById("tval");if(el)el.textContent=t;if(t<=0){endTimer()}},1000);
+ window.endTimer=()=>{clearInterval(tInt);tInt=null;document.querySelector(".timerwrap")?.remove()};
+}
+
+/* ============ TIMER ============ */
+let tInt=null;
+function restTimer(sec){
+ const w=document.createElement("div");w.className="timerwrap";
+ w.innerHTML=`<div class="timerlbl">Descanso</div><div class="timer" id="tval">${sec}</div><button class="timerskip" onclick="endTimer()">Saltar descanso</button>`;
+ document.body.appendChild(w);
+ let t=sec;
+ tInt=setInterval(()=>{t--;const el=document.getElementById("tval");if(el)el.textContent=t;
+  if(t<=0){endTimer()}},1000);
+ window.endTimer=()=>{clearInterval(tInt);tInt=null;const el=document.querySelector(".timerwrap");if(el)el.remove()};
+}
+
+/* ============ LOG PESO/SENSACIÓN ============ */
+function askLog(){
+ const id=S.plan[S.idx], ex=EX[id];
+ if(!ex.peso){nextEx();return}
+ // Peso sugerido: último registrado, o el par de settings
+ let pre="";
+ const h=S.logs[id];
+ if(h&&h.length) pre=h[h.length-1].p;
+ else if(S.lugar==="casa"&&ex.par&&S.cfg.mA!=null) pre = ex.par==="B" ? (S.cfg.mB??"") : (S.cfg.mA??"");
+ const m=document.createElement("div");m.className="modal";
+ m.innerHTML=`<div class="sheet">
+  <h2>${ex.n} — registro</h2>
+  <div class="lbl">Peso usado (kg)</div>
+  <input id="pval" type="number" inputmode="decimal" value="${pre}" placeholder="0">
+  <div class="lbl">¿Cómo se sintió?</div>
+  <div class="feel" id="feels">${["😵","😣","😐","🙂","💪"].map((e,i)=>`<button data-f="${i+1}">${e}</button>`).join("")}</div>
+  <button class="btn" id="saveLog">Guardar y seguir</button>
+  <button class="btn ghost" id="skipLog">Seguir sin registrar</button>
+ </div>`;
+ document.body.appendChild(m);
+ let f=3;
+ m.querySelectorAll("#feels button").forEach(b=>b.onclick=()=>{f=+b.dataset.f;m.querySelectorAll("#feels button").forEach(x=>x.classList.remove("sel"));b.classList.add("sel")});
+ m.querySelector("#saveLog").onclick=async()=>{
+  const p=parseFloat(m.querySelector("#pval").value);
+  if(!isNaN(p)&&p>0){ if(!S.logs[id])S.logs[id]=[]; S.logs[id].push({p,f,d:new Date().toISOString().slice(0,10)}); if(S.logs[id].length>20)S.logs[id]=S.logs[id].slice(-20); await saveLogs(); }
+  m.remove(); nextEx();
+ };
+ m.querySelector("#skipLog").onclick=()=>{m.remove();nextEx()};
+}
+window.popDay=()=>{if(S.pop==null||S.pop.day==null||!S.pop.set)return null;const el=Math.floor((new Date(new Date().toISOString().slice(0,10))-new Date(S.pop.set))/864e5);return S.pop.day+el};
+window.setPop=async(n)=>{S.pop={day:n,set:new Date().toISOString().slice(0,10)};await saveLogs();render()};
+function guiaPop(d){return {t:"",s:[]}}
+window.resetAll=()=>{S={...S,screen:"lugar",lugar:null,fase:null,tiempo:null,plan:[],idx:0,serieDone:{},sesSaved:false};render()};
+window.saveMts=async()=>{const v=parseFloat(document.getElementById("mts").value);if(!isNaN(v)&&v>0&&S.hist.length){S.hist[S.hist.length-1].m=S.lugar==="ruta"?v*1000:v;await saveLogs();document.getElementById("mts").value="";document.getElementById("mts").placeholder="✓ guardado"}};
+window.saveBody=async()=>{const kg=parseFloat(document.getElementById("bkg").value),fat=parseFloat(document.getElementById("bfat").value),mme=parseFloat(document.getElementById("bmme").value);
+ if(!isNaN(kg)){S.body.push({d:new Date().toISOString().slice(0,10),kg,fat:isNaN(fat)?null:fat,mme:isNaN(mme)?null:mme});await saveLogs();render()}};
+window.saveMood=async(v)=>{const d=new Date().toISOString().slice(0,10);S.mood=(S.mood||[]).filter(m=>m.d!==d);S.mood.push({d,v});await saveLogs();render()};
+window.exportProg=()=>{
+ let txt="PROGRESO — Coach Dani\n"+new Date().toLocaleDateString()+"\n\n";
+ const ids=Object.keys(S.logs);
+ if(!ids.length){txt+="(Aún sin registros de peso)"}
+ else ids.forEach(id=>{
+  const ex=EX[id]?EX[id].n:id, h=S.logs[id];
+  txt+=`${ex}:\n`;
+  h.forEach(u=>{txt+=`  ${u.d} · ${u.p} kg · sensación ${u.f}/5\n`});
+  txt+="\n";
+ });
+ const m=document.createElement("div");m.className="modal";
+ m.innerHTML=`<div class="sheet"><h2>Exportar progreso</h2>
+  <textarea readonly style="width:100%;height:160px;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:12px;padding:10px;font-family:monospace">${txt}</textarea>
+  <button class="btn" id="cp">Copiar al portapapeles</button>
+  <button class="btn ghost" id="cpj">Copiar respaldo JSON</button>
+  <div class="lbl" style="margin-top:12px;color:var(--agua)">Restaurar desde respaldo</div>
+  <textarea id="impj" placeholder="Pega aquí un respaldo JSON…" style="width:100%;height:60px;background:var(--panel-2);border:1.5px solid var(--line);border-radius:10px;color:var(--ink);font-size:11px;padding:8px;font-family:monospace;margin-top:6px"></textarea>
+  <button class="btn ghost" id="imp">Cargar respaldo</button>
+  <button class="btn ghost" id="cl">Cerrar</button></div>`;
+ document.body.appendChild(m);
+ m.querySelector("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(txt);m.querySelector("#cp").textContent="✓ Copiado"}catch(e){m.querySelector("textarea").select()}};
+ m.querySelector("#cpj").onclick=async()=>{const j=JSON.stringify({logs:S.logs,cfg:S.cfg});try{await navigator.clipboard.writeText(j);m.querySelector("#cpj").textContent="✓ JSON copiado"}catch(e){}};
+ m.querySelector("#imp").onclick=async()=>{try{const d=JSON.parse(m.querySelector("#impj").value);if(d.logs){S.logs=d.logs;S.cfg=d.cfg||S.cfg;await saveLogs();m.querySelector("#imp").textContent="✓ Restaurado"}}catch(e){m.querySelector("#imp").textContent="JSON inválido"}};
+ m.querySelector("#cl").onclick=()=>m.remove();
+};
+window.saveCfg=async()=>{const a=parseFloat(document.getElementById("mA").value),b=parseFloat(document.getElementById("mB").value);S.cfg.mA=isNaN(a)?null:a;S.cfg.mB=isNaN(b)?null:b;await saveLogs();go("lugar")};
+
+/* ====== RECUPERACIÓN: SUEÑO ====== */
+window.sleepRec=(caso)=>{
+ const out=document.getElementById("sleepOut");
+ const M={
+  mal:{h:"Prioriza 7.5–8 h esta noche + power nap de 20\u2032 hoy (13–15h, no más tarde ni más largo o te cuesta dormir).",n:"El agente baja la intensidad de tu semana hoy: solo Z2 suave o recuperación."},
+  fiesta:{h:"Recupera con 8 h la próxima noche, no intentes 'compensar' hoy con una siesta larga. Power nap 20\u2032 si vas muy justo.",n:"Hidrátate extra. Nada de fuerza intensa hoy."},
+  intenso:{h:"Apunta a 8 h — el músculo se construye durmiendo, no entrenando. Ventana firme 22:30.",n:"Sesión intensa + buen sueño = recomposición. Sesión intensa + mal sueño = catabolismo."},
+  bien:{h:"Mantén tu ventana 22:30–23:00 → 06:00. No hace falta siesta si dormiste 7h+.",n:"Vas bien. La consistencia del horario es lo que sostiene tu energía y recuperación."}
+ };
+ const d=M[caso];
+ out.innerHTML=`<div class="excard" style="margin-top:16px"><div class="reco" style="color:var(--agua);font-size:14px">${d.h}</div><p style="font-size:12.5px;color:var(--ink-2);margin-top:8px">${d.n}</p>
+ <p style="font-size:11.5px;color:var(--ink-3);margin-top:10px">⚠️ Power nap = 20\u2032 máximo, antes de las 15h. Más largo entra en sueño profundo y despiertas peor y te descuadra la noche.</p></div>`;
+};
+
+/* ====== RECUPERACIÓN: ELONGACIÓN GUIADA ====== */
+let elState=null;
+window.startElong=(k)=>{elState={zone:k,i:0};runElong()};
+function runElong(){
+ const z=ELONG[elState.zone], it=z.items[elState.i];
+ if(!it){document.querySelector(".timerwrap")?.remove();go('elong');return}
+ let w=document.querySelector(".timerwrap");
+ if(!w){w=document.createElement("div");w.className="timerwrap";document.body.appendChild(w)}
+ w.innerHTML=`<div class="timerlbl">${elState.i+1} de ${z.items.length}</div>
+  <div style="width:200px;background:var(--panel-2);border-radius:12px;padding:8px;margin-bottom:10px">${SVGS[it[2]]||""}</div>
+  <div style="font-size:20px;font-weight:800;color:var(--ink);text-align:center;padding:0 24px;margin-bottom:10px">${it[0]}</div>
+  <div class="timer" id="tval">${it[1]}</div>
+  <button class="timerskip" onclick="nextElong()">Siguiente →</button>
+  <button class="timerskip" style="margin-top:10px;background:transparent;border-color:var(--ink-3);color:var(--ink-3)" onclick="exitElong()">✕ Salir</button>`;
+ clearInterval(tInt);let t=it[1];
+ tInt=setInterval(()=>{t--;const el=document.getElementById("tval");if(el)el.textContent=t;if(t<=0){nextElong()}},1000);
+}
+window.nextElong=()=>{clearInterval(tInt);elState.i++;runElong()};
+window.exitElong=()=>{clearInterval(tInt);document.querySelector(".timerwrap")?.remove();go('elong')};
+
+/* ====== RECUPERACIÓN: MEDITACIÓN ====== */
+window.pickMedit=(k)=>{
+ const v=MEDIT[k];
+ app.innerHTML=`<button class="back" onclick="go('medit')">← Meditación</button><h1>${v.n}</h1><p class="sub">${v.guide}</p>
+ <div class="row">${v.min.map(mn=>`<div class="opt" onclick="startMedit(${mn})"><div class="t">${mn}\u2032</div></div>`).join("")}</div>
+ <p class="footer-note">Mínimo viable: 3\u2032. Consistencia &gt; duración.</p>`;
+};
+window.startMedit=(mn)=>{
+ let secs=mn*60;
+ const w=document.createElement("div");w.className="timerwrap";document.body.appendChild(w);
+ const upd=()=>{const m=Math.floor(secs/60),s=secs%60;const el=document.getElementById("tval");if(el)el.textContent=`${m}:${String(s).padStart(2,"0")}`};
+ w.innerHTML=`<div class="timerlbl">Meditación</div><div class="timer" id="tval">${mn}:00</div><button class="timerskip" onclick="endMedit()">Terminar</button>`;
+ clearInterval(tInt);
+ tInt=setInterval(()=>{secs--;upd();if(secs<=0){endMedit()}},1000);
+ window.endMedit=()=>{clearInterval(tInt);document.querySelector(".timerwrap")?.remove();go('medit')};
+};
+
+/* ====== RECUPERACIÓN: RESPIRACIÓN GUIADA ====== */
+window.startResp=(k)=>{
+ const v=RESP[k];let ciclo=0,fase=0;
+ const w=document.createElement("div");w.className="timerwrap";document.body.appendChild(w);
+ function paso(){
+  if(ciclo>=v.ciclos){clearInterval(tInt);w.remove();go('resp');return}
+  const [txt,dur]=v.fases[fase];
+  const grow=/nhala/.test(txt);const shrink=/xhala/.test(txt);
+  const scale=grow?1.5:shrink?0.7:1;
+  w.innerHTML=`<div class="timerlbl">Ciclo ${ciclo+1} de ${v.ciclos}</div>
+   <div style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,var(--agua-dk),transparent);border:3px solid var(--agua);margin:20px 0;transition:transform ${dur}s ease-in-out;transform:scale(${scale})"></div>
+   <div style="font-size:24px;font-weight:800;color:var(--ink)">${txt}</div>
+   <div class="timer" id="tval" style="font-size:56px">${dur}</div>
+   <button class="timerskip" onclick="endResp()">Terminar</button>`;
+  clearInterval(tInt);let t=dur;
+  tInt=setInterval(()=>{t--;const el=document.getElementById("tval");if(el)el.textContent=t;
+   if(t<=0){fase++;if(fase>=v.fases.length){fase=0;ciclo++}paso()}},1000);
+ }
+ window.endResp=()=>{clearInterval(tInt);document.querySelector(".timerwrap")?.remove();go('resp')};
+ paso();
+};
+
+/* ====== RECUPERACIÓN: SUELO PÉLVICO ====== */
+let kgState=null;
+window.startKegel=(k)=>{kgState={mode:k,i:0};runKegel()};
+function runKegel(){
+ const z=KEGEL[kgState.mode], it=z.items[kgState.i];
+ if(!it){document.querySelector(".timerwrap")?.remove();go('kegel');return}
+ const on=/ontrae|prieta/.test(it[0]);
+ let w=document.querySelector(".timerwrap");
+ if(!w){w=document.createElement("div");w.className="timerwrap";document.body.appendChild(w)}
+ const col=on?"var(--carga)":"var(--agua)";
+ w.innerHTML=`<div class="timerlbl">${kgState.i+1} de ${z.items.length}</div>
+  <div style="width:130px;height:130px;border-radius:50%;border:4px solid ${col};display:flex;align-items:center;justify-content:center;margin:16px 0;transition:transform .4s;transform:scale(${on?1.2:0.85})">
+   <span style="font-size:22px;font-weight:800;color:${col}">${on?"▲":"▽"}</span></div>
+  <div style="font-size:26px;font-weight:800;color:${col}">${it[0]}</div>
+  <div class="timer" id="tval" style="font-size:56px">${it[1]}</div>
+  <button class="timerskip" onclick="endKegel()">Terminar</button>
+  <button class="timerskip" style="margin-top:10px;background:transparent;border-color:var(--ink-3);color:var(--ink-3)" onclick="endKegel()">✕ Salir</button>`;
+ clearInterval(tInt);let t=it[1];
+ tInt=setInterval(()=>{t--;const el=document.getElementById("tval");if(el)el.textContent=t;if(t<=0){kgState.i++;runKegel()}},1000);
+}
+window.endKegel=()=>{clearInterval(tInt);document.querySelector(".timerwrap")?.remove();go('kegel')};
+
+loadLogs().then(render);
+</script>
+</body>
+</html>
